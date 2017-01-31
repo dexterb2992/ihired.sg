@@ -1,0 +1,256 @@
+.header_in {
+  /*background-size: cover;*/
+
+  background-color: #fff;
+	border-bottom: 10px solid #ac1421;
+}
+
+.navi_in_logo {
+	float: left;
+	background-image: url('../images/default/logo-syringe.png');
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: 20px 20px;
+  background-size: 181px 65px;
+	height:120px;
+	width: 181px;
+}
+
+.user-container-head {
+	color: #fff;
+	background-color:  #ac1421;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 10px 10px 0px 0px;
+	border-radius: 10px 10px 0px 0px;
+	padding: 11px 0 0 20px;
+	font-size: 150%;
+
+	min-height: 50px;
+	height: auto;
+	min-width: 500px;
+	width: 100%;
+} 
+
+.user-container {
+	margin: 10% 0 0 1%;
+	padding: 0;
+
+	border: 1px solid #999;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+
+
+	min-height: 100px;
+	height: auto;
+	min-width: 500px;
+	width: 98%;
+}
+
+.user-content {
+	margin: 3px;
+	padding: 0 60px 10px 60px;
+
+	border: 2px solid #999;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px 0px 10px 10px;
+	border-radius: 0px 0px 10px 10px;
+}
+
+.user-content-head {
+	color:rgb(73, 77, 143) !important;
+	padding-bottom: 20px;
+	border-bottom: 2px solid #999;
+}
+.navi_homelink {
+	/*background-image: url('../images/images/home-btn.png');*/
+	background-color: #ac1421;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  padding: 5px;
+/*	height:20px;
+	width:20px;*/
+	/*margin-top: 20px;*/
+	/*margin-left: -200px;*/
+}
+
+.list-thumb {
+	width: 90px;
+	height: 90px;
+	float: left;
+	margin-right: 5px;
+}
+
+.table tbody>tr>td.vert-align{
+    padding-top: 2%;
+}
+.user-btn {
+	background-color: rgb(46, 154, 245);
+	color: #fff;
+
+}
+.rgb-blue {
+	color: rgb(73, 77, 143);
+}
+.rgb-gray {
+	color: rgb(150, 136, 150);
+}
+.btn_rem {
+	cursor: pointer;
+}
+.radio-tog-btn {
+	background-color: #fff !important;
+	color: #888 !important;
+	/*border-color : rgb(46, 154, 245);*/
+	border : 2px solid #FFF;
+	border-radius : 0;
+}
+.radio-tog-btn.active {
+	background-color : rgb(46, 154, 245) !important;
+	color : #FFF !important;
+}
+.btn-tog-grp {
+	border : 1px solid rgb(46, 154, 245);
+}
+
+.country-nav {
+	padding-bottom: 20px;
+	border-bottom: 2px solid #999;
+}
+.country-nav-tabs {
+	padding: 0 !important;
+	margin: 0 !important;
+	color:rgb(73, 77, 143) !important;
+}
+.red-table-header {
+	background-color : #ac1421;
+	color : #fff;
+}
+.btn-noradius {
+	border-radius: 0 !important;
+}
+.borderless td, .borderless th {
+    border: none !important;
+}
+
+/*JOB SEEKER */
+
+.job-seeker-manage-box {
+	position: relative;
+}
+.job-seeker-manage-box input {
+	position: absolute;
+	top: -12px;
+	right: 5px;
+	width: 35%;
+}
+
+.job-seeker-filter-box input {
+	margin: 0;
+}
+
+.job-seeker-filter-box fieldset{
+	position: relative;
+	width: 23%;
+	margin: 0 10px 10px 10px;
+	float: left;
+}
+
+.clear-button{
+	position: absolute;
+	top: 10px;
+	right: 5px;
+	display: none;
+	background-color: #7E7E7E;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	color: #fff;
+	font-size: 13px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.clear-button:hover{
+	background-color: #DD5656;
+}
+
+/*logo display*/
+.fix-logo{
+	position: relative;
+	width: 100%;
+}
+
+.col-width-20{
+	width:50% !important;
+	padding: 10px;
+}
+
+.delete-logo{
+	position: absolute;
+	bottom: 1px;
+	width: 100%;
+	background-color: rgba(16, 16, 16, 0.73);
+	color: #fff;
+	padding: 6px 0;
+}
+
+/*client edit form*/
+
+.client-form-column-25{
+	width: 27%;
+	float: left;
+	padding:10px;
+}
+
+	.client-form-column-25 textarea{
+		height: 112px;
+		resize: none;
+	}
+
+.client-form-column-20{
+	width: 25%;
+	float: left;
+	padding:10px;
+}
+
+.client-form-column-45{
+	width: 45%;
+	float: left;
+	padding: 10px;
+}
+
+	.client-form-column-45 .input {
+		width: 48%;
+		padding: 0;
+		margin: 0 0 0 10px;
+	}
+
+.client-form-column-25 fieldset, .client-form-column-20 fieldset, .client-form-column-45 fieldset {
+	width: 100%;
+}
+
+.edit-client-save{
+	position: absolute;
+	top: 21px;
+	right: 40px;
+	border-radius: 4px;
+	width: 90px;
+	padding: 10px;
+}
+
+.form-client-name{
+	width: 88%;
+}
+
+.transaction_message{
+	width: 100%;
+	text-align: center;
+	font-size: 18px;
+	border-radius: 5px;
+	padding: 10px;
+}
+
+
+
+		

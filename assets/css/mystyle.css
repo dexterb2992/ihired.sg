@@ -1,0 +1,15 @@
+/* enable absolute positioning */
+body {
+  background-image: url('../images/default/admin_bg.jpg');
+
+  min-height: 100%;
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.navbar-brand > img {
+    display: block;
+    max-width: 180px;
+}

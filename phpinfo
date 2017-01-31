@@ -1,0 +1,5 @@
+######################################
+PHP functions that needs to be enabled
+######################################
+
+fsockopen = true

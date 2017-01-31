@@ -1,0 +1,87 @@
+body { 
+	margin:0px;
+	height:100%;
+	font-family:Calibri; /*, Arial, Helvetica, sans-serif;  */
+	font-size:12px;
+}
+
+.panel {
+	margin-top:30px;
+	width:1024px;
+	min-height:500px;
+	box-shadow: 1px 3px 15px 1px #888888;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	border-radius: 10px;
+	padding-bottom:20px;
+	margin-bottom:20px;
+}
+
+form#LoginForm input[type=text], form#LoginForm input[type=password] {
+	width:100%;
+}
+form#LoginForm table table td {
+	padding:2px;
+}
+
+table.helper td a,table.helper td span{
+	text-decoration:none;
+	font-size:11px;
+	color:#111;
+} 
+
+table.helper td a:hover{
+	text-decoration:underline;
+	color:#333333;
+} 
+
+input.rounded, input[type=password].rounded {
+	border: 1px solid #ccc;
+	-moz-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	-moz-box-shadow: 2px 2px 3px #666;
+	-webkit-box-shadow: 2px 2px 3px #666;
+	box-shadow: 2px 2px 3px #666; 
+	padding: 4px 7px;
+	outline: 0;
+	-webkit-appearance: none;
+}
+
+img.login, img.clear{
+	width:68px;
+	height:27px; 
+}
+img.login:hover, img.clear:hover{
+	cursor:pointer;
+	opacity:0.8;
+	filter:alpha(opacity=80); /* For IE8 and earlier */
+}
+div.mid_border{
+	background-color:#333333;
+	height:5px;
+}
+
+table.module_preview td.icon {
+	width:48px;
+	padding-top:15px;
+}
+
+table.module_preview td.details{
+	padding-left:5px;
+	font-size:12px;
+}
+
+table.module_preview td.details p{ 
+	font-size:18px;
+	font-weight:bold;
+	color:#990000;
+	font-style:italic;
+	border-bottom:#ccc 3px solid;
+	padding-bottom:4px;
+	padding-right:20px;
+	margin-bottom:1px;
+}
+ 
