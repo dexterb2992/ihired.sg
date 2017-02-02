@@ -15,6 +15,10 @@ class Company_model extends CI_Model{
 	public function all($format = 'object'){
 		$res = $this->db->get($this->table);
 
+		$this->db->select("{$this->table}.*, t2.industry_name");
+	    $this->db->join("industry_master as t2", "{$this->table}.industry_id = t2.industry_id", 'INNER');
+	    $res = $this->db->get($this->table);
+	    
 		switch ($format) {
 			case 'array':
 				$res = $res->result_array();
