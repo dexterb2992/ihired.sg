@@ -19,7 +19,7 @@ class Dashboard extends CI_Controller{
 				"label" => "Create a New Country"
 			),
 			array(
-				"uri" => "admin/company_management",
+				"uri" => "admin/company",
 				"label" => "Company Management"
 			)
 		);

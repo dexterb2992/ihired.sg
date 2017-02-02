@@ -1,13 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Industry_model extends CI_Model {
+class Company_model extends CI_Model{
 	protected $table;
 	protected $table_id;
 
 	public function __construct(){
 		parent::__construct();
-		$table = "industry_master";
-		$table_id = "industry_id";
+		$table = "company_master";
+		$table_id = "company_id";
 		$this->table = $table;
 		$this->table_id = $table_id;
 	}
@@ -19,7 +19,7 @@ class Industry_model extends CI_Model {
 			case 'array':
 				$res = $res->result_array();
 				break;
-
+				
 			case 'json':
 				$res = json_encode($res->result_array());
 				break;
@@ -71,6 +71,7 @@ class Industry_model extends CI_Model {
 			return $format == 'array' ? $res->row_array() : $res->row();
 		return false;
 	}
+
 
 	/**
 	 *  @param integer $id

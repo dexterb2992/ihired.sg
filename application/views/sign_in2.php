@@ -30,7 +30,6 @@ $this->load->view('includes/header');
 </div>
 <div class="container">
 
-  <!-- <form method="post" class="form-horizontal" style="margin-top:250px;" novalidate> -->
   <?= form_open(base_url("home/login"), array('class' => 'form-horizontal', 'style' => 'margin-top:250px;')); ?>
     <div class="col-lg-6 adjust-container" style="background-color:rgba(255, 255, 255, 0.56);  border-radius: 6px;  -webkit-box-shadow: 0 0 10px 1px rgba(00,00,00,.05);   box-shadow: 0 0 10px 1px rgba(00,00,00,.05);padding:30px 35px 30px 30px;">
     <?php if( form_custom_error('signin') || $this->session->flashdata('msg') ): ?>
