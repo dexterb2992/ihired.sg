@@ -2,12 +2,18 @@
 
 class Function_model extends CI_Model {
 
+	public function __construct(){
+		parent::__construct();
+		$this->table = "function_master";
+		$this->table_id = "function_id";
+	}
+
 	public function get_data() {
 
-		$this->db->select('function_master.*, t2.full_name, t2.short_name');
-	    $this->db->join('user_master as t2', 'function_master.user_id = t2.user_id', 'LEFT');
-	  	$this->db->order_by('function_id', 'DESC');
-		$query = $this->db->get('function_master');
+		$this->db->select("$this->table.*, t2.full_name, t2.short_name");
+	    $this->db->join('user_master as t2', '$this->table.user_id = t2.user_id', 'LEFT');
+	  	$this->db->order_by($this->table_id, 'DESC');
+		$query = $this->db->get($this->table);
 		if ($query && $query->num_rows())	{
 			$result = $query->result_array();
 			return $result;
@@ -18,16 +24,16 @@ class Function_model extends CI_Model {
 	public function add_function($data) {
 
 		$this->db->set($data);
-		$this->db->insert('function_master');
+		$this->db->insert($this->table);
 
 		if($this->db->affected_rows()) {
 
 			$insert_id = $this->db->insert_id();
-			$this->db->select('function_master.*, t2.full_name, t2.short_name');
-		    $this->db->join('user_master as t2', 'function_master.user_id = t2.user_id', 'LEFT');
-	    	$this->db->order_by('function_id', 'DESC');
-			$this->db->where('function_id', $insert_id);
-			$query = $this->db->get('function_master');
+			$this->db->select("$this->table.*, t2.full_name, t2.short_name");
+		    $this->db->join('user_master as t2', '$this->table.user_id = t2.user_id', 'LEFT');
+	    	$this->db->order_by($this->table_id, 'DESC');
+			$this->db->where($this->table_id, $insert_id);
+			$query = $this->db->get($this->table);
 
 			if ($query && $query->num_rows())	{
 				$result = $query->result_array();
@@ -39,8 +45,8 @@ class Function_model extends CI_Model {
 
 	public function delete_function($deId) {
 
-		$this->db->where('function_id', $deId);
-		$this->db->delete('function_master');
+		$this->db->where($this->table_id, $deId);
+		$this->db->delete($this->table);
 
 		if($this->db->affected_rows()) {
 			return TRUE;
@@ -51,10 +57,10 @@ class Function_model extends CI_Model {
 	//fetches the list of records for the the autocomplete 
 	public function get_select_list_data($txtVal) {
 
-		$this->db->select('function_id, function_name');
+		$this->db->select("$this->table_id, function_name");
 		$this->db->like('function_name', $txtVal);
 		$this->db->limit(5);
-		$query = $this->db->get('function_master');
+		$query = $this->db->get($this->table);
 
 		if ($query && $query->num_rows())	{
 			$result = $query->result_array();
