@@ -1,15 +1,10 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
-class Company_model extends CI_Model{
-	protected $table;
-	protected $table_id;
-
+<?php
+class Jobaccess_model extends CI_Model {
+	
 	public function __construct(){
 		parent::__construct();
-		$table = "company_master";
-		$table_id = "company_id";
-		$this->table = $table;
-		$this->table_id = $table_id;
+		$this->table = "job_access";
+		$this->table_id = "job_access_id";
 	}
 
 	public function all($format = 'object'){
@@ -34,15 +29,6 @@ class Company_model extends CI_Model{
 		}
 
 		return $res;
-	}
-
-	public function get($columns = "*", $format = 'object'){
-		$this->db->select($columns);
-		$res = $this->db->get($this->table);
-
-		if( $res->num_rows() > 0 )
-			return $format == 'array' ? $res->row_array() : $res->row();
-		return array();
 	}
 
 	/**
@@ -98,5 +84,4 @@ class Company_model extends CI_Model{
 			return true;
 		return false;
 	}
-
 }

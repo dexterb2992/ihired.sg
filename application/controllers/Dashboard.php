@@ -21,6 +21,10 @@ class Dashboard extends CI_Controller{
 			array(
 				"uri" => "admin/company",
 				"label" => "Company Management"
+			),
+			array(
+				"uri" => "admin/job_access",
+				"label" => "Job Access"
 			)
 		);
 

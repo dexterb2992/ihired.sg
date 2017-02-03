@@ -4,6 +4,8 @@ class User_master_model extends CI_Model {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->table = "user_master";
+		$this->table_id = "user_id";
 	}
 
 	public function create($full_name, $short_name, $email_id) {
@@ -22,12 +24,12 @@ class User_master_model extends CI_Model {
 			);
 
 			$this->db->set($data);
-			$this->db->insert('user_master');
+			$this->db->insert($this->table);
 
 			$last_ins = $this->db->insert_id();
 
-			$this->db->where('user_id', $last_ins);
-			$query = $this->db->get('user_master');
+			$this->db->where($this->table_id, $last_ins);
+			$query = $this->db->get($this->table);
 
 			if($query->num_rows() > 0)
 				return $query->row_array();	
@@ -40,9 +42,9 @@ class User_master_model extends CI_Model {
 
 	public function set_image($id, $img) {
 
-		$this->db->where('user_id', $id);
+		$this->db->where($this->table_id, $id);
 		$this->db->set('user_image', $img);
-		$this->db->update('user_master');
+		$this->db->update($this->table);
 
 		if($this->db->affected_rows())
 			return true;
@@ -50,9 +52,9 @@ class User_master_model extends CI_Model {
 	}
 
 	public function remove_image($id){
-		$this->db->where('user_id', $id);
+		$this->db->where($this->table_id, $id);
 		$this->db->set('user_image', NULL);
-		$this->db->update('user_master');
+		$this->db->update($this->table);
 
 		if($this->db->affected_rows())
 			return true;
@@ -60,8 +62,8 @@ class User_master_model extends CI_Model {
 	}
 
 	public function delete($id){
-		$this->db->where('user_id', $id);
-		$this->db->delete('user_master');
+		$this->db->where($this->table_id, $id);
+		$this->db->delete($this->table);
 
 		if($this->db->affected_rows())
 			return true;
@@ -70,7 +72,7 @@ class User_master_model extends CI_Model {
 
 	public function checkExistingEmail($email){
 		$this->db->where('email_id', $email);
-		$res = $this->db->get('user_master');
+		$res = $this->db->get($this->table);
 		
 		if( $res->num_rows() > 0 )
 			return true;
@@ -92,7 +94,7 @@ class User_master_model extends CI_Model {
 	public function password_change($user_id, $new_password)	{
 
 		$hash = md5($new_password);
-		$this->db->where('user_id', $user_id);	
+		$this->db->where($this->table_id, $user_id);	
 		
 		$data = array(
 			"password" => $hash,
@@ -110,9 +112,9 @@ class User_master_model extends CI_Model {
 		if($req_stat == NULL) {
 			$this->session->set_userdata('u_req', NULL);
 		}
-		$this->db->where('user_id', $user_id);	
+		$this->db->where($this->table_id, $user_id);	
 		$this->db->set('request', $req_stat);
-		$query = $this->db->update('user_master');
+		$query = $this->db->update($this->table);
 		
 		if($this->db->affected_rows())
 			return true;
@@ -120,9 +122,9 @@ class User_master_model extends CI_Model {
 	}
 
 	public function change_access($id, $access){
-		$this->db->where('user_id', $id);	
+		$this->db->where($this->table_id, $id);	
 		$this->db->set('dash_access', $access);
-		$query = $this->db->update('user_master');
+		$query = $this->db->update($this->table);
 		
 		if($this->db->affected_rows())
 			return true;
@@ -131,7 +133,7 @@ class User_master_model extends CI_Model {
 
 	public function get_list($start=FALSE, $limit=FALSE) {
 		
-		$query = $this->db->get('user_master');
+		$query = $this->db->get($this->table);
 		if($query->num_rows() > 0)
 			return $query->result_array();
 		return FALSE;
@@ -139,11 +141,20 @@ class User_master_model extends CI_Model {
 
 	public function find($email_id, $format = 'object'){
 		$this->db->where('email_id', $email_id);
-		$res = $this->db->get('user_master');
+		$res = $this->db->get($this->table);
 
 		if( $res->num_rows() > 0 )
 			return $format == 'array' ? $res->row_array() : $res->row();
 		return false;
+	}
+
+	public function get($columns = "*", $format = 'object'){
+		$this->db->select($columns);
+		$res = $this->db->get($this->table);
+
+		if( $res->num_rows() > 0 )
+			return $format == 'array' ? $res->row_array() : $res->row();
+		return array();
 	}
 
 }

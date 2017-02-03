@@ -62,4 +62,13 @@ class Function_model extends CI_Model {
 		}
 		return FALSE;
 	}
+
+	public function get($columns = "*", $format = 'object'){
+		$this->db->select($columns);
+		$res = $this->db->get($this->table);
+
+		if( $res->num_rows() > 0 )
+			return $format == 'array' ? $res->row_array() : $res->row();
+		return false;
+	}
 }

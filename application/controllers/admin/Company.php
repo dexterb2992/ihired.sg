@@ -36,12 +36,12 @@ class Company extends CI_Controller {
 		$industry_id = $this->input->post('industry_id');
 
 		if( $industry_id == 0 ){
-			$values = array(
+			$industry = array(
 				"industry_name" => $industry_name,
 				"user_id" => $this->session->userdata('user_id'),
 				"date_added" => date('Y-m-d')
 			);
-			$res = $this->industry->create($values);
+			$res = $this->industry->create($industry);
 			if( $res !== false ){
 				$industry_id = $res;
 			}else{
@@ -54,7 +54,7 @@ class Company extends CI_Controller {
 			}
 		}
 
-		$values = array(
+		$company = array(
 			"company_name" => $company_name,
 			"industry_id" => $industry_id
 		);
@@ -63,13 +63,37 @@ class Company extends CI_Controller {
 			'success' => true,
 			'msg' => 'A company has been added successfully.'
 		);
-		
-		if( $this->company->create($values) == false ){
+
+		$result = $this->company->create($company);
+
+		if( $result == false ){
 			$res['success'] = false;
 			$res['msg'] = 'Unable to create a Company right now. Please try again later.';
+		}else{
+			$company['company_id'] = $result;
+			$company['industry_name'] = $industry_name;
+			$res['details'] = array(
+				"company" => $company
+			);
 		}
 
 		echo json_encode($res);
+	}
+
+	public function delete(){
+		$id = $this->input->post('id');
+
+		$response = array(
+			'success' => false, 
+			'msg' => "Sorry, but we can't process your request right now. Please try again later." 
+		);
+
+		if( $this->company->delete($id) ){
+			$response['msg'] = 'Company successfully deleted.';
+			$response['success'] = true;
+		}
+
+		echo json_encode($response);
 	}
 
 }
