@@ -10,10 +10,11 @@ class Function_model extends CI_Model {
 
 	public function get_data() {
 
-		$this->db->select("$this->table.*, t2.full_name, t2.short_name");
-	    $this->db->join('user_master as t2', '$this->table.user_id = t2.user_id', 'LEFT');
+		$this->db->select("t1.*, t2.full_name, t2.short_name");
+		$this->db->from($this->table." as t1");
+	    $this->db->join('user_master as t2', 't1.user_id = t2.user_id', 'LEFT');
 	  	$this->db->order_by($this->table_id, 'DESC');
-		$query = $this->db->get($this->table);
+		$query = $this->db->get();
 		if ($query && $query->num_rows())	{
 			$result = $query->result_array();
 			return $result;
@@ -29,11 +30,12 @@ class Function_model extends CI_Model {
 		if($this->db->affected_rows()) {
 
 			$insert_id = $this->db->insert_id();
-			$this->db->select("$this->table.*, t2.full_name, t2.short_name");
-		    $this->db->join('user_master as t2', '$this->table.user_id = t2.user_id', 'LEFT');
+			$this->db->select("t1.*, t2.full_name, t2.short_name");
+			$this->from($this->table." as t1");
+		    $this->db->join('user_master as t2', 't1.user_id = t2.user_id', 'LEFT');
 	    	$this->db->order_by($this->table_id, 'DESC');
 			$this->db->where($this->table_id, $insert_id);
-			$query = $this->db->get($this->table);
+			$query = $this->db->get();
 
 			if ($query && $query->num_rows())	{
 				$result = $query->result_array();
@@ -74,7 +76,7 @@ class Function_model extends CI_Model {
 		$res = $this->db->get($this->table);
 
 		if( $res->num_rows() > 0 )
-			return $format == 'array' ? $res->row_array() : $res->row();
-		return false;
+			return $format == 'array' ? $res->result_array() : $res->results();
+		return array();
 	}
 }

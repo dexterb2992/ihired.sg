@@ -1,5 +1,5 @@
 <?php
-class Jobaccess_model extends CI_Model {
+class JobsAccess_model extends CI_Model {
 	
 	public function __construct(){
 		parent::__construct();
@@ -10,10 +10,12 @@ class Jobaccess_model extends CI_Model {
 	public function all($format = 'object'){
 		$res = $this->db->get($this->table);
 
-		$this->db->select("{$this->table}.{$this->table_id},user.full_name,function.function_name,date");
-	    $this->db->join("user_master as user", "{$this->table}.user_id = user.user_id", 'INNER');
-	    $this->db->join("function_master as function", "{$this->table}.function_id = function.function_id", 'INNER');
-	    $res = $this->db->get($this->table);
+		$this->db->select("a.{$this->table_id},u.full_name,c.company_name,f.function_name,a.date");
+		$this->db->from($this->table." as a");
+	    $this->db->join("user_master as u", "a.user_id = u.user_id", 'INNER');
+	    $this->db->join("company_master as c", "a.company_id = c.company_id", 'INNER');
+	    $this->db->join("function_master as f", "a.function_id = f.function_id", 'INNER');
+	    $res = $this->db->get();
 	    
 		switch ($format) {
 			case 'array':

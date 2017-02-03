@@ -153,7 +153,7 @@ class User_model extends CI_Model {
 		$res = $this->db->get($this->table);
 
 		if( $res->num_rows() > 0 )
-			return $format == 'array' ? $res->row_array() : $res->row();
+			return $format == 'array' ? $res->result_array() : $res->results();
 		return array();
 	}
 

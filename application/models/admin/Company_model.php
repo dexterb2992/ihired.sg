@@ -36,15 +36,6 @@ class Company_model extends CI_Model{
 		return $res;
 	}
 
-	public function get($columns = "*", $format = 'object'){
-		$this->db->select($columns);
-		$res = $this->db->get($this->table);
-
-		if( $res->num_rows() > 0 )
-			return $format == 'array' ? $res->row_array() : $res->row();
-		return array();
-	}
-
 	/**
 	 * @param array $values
 	 */
@@ -97,6 +88,15 @@ class Company_model extends CI_Model{
 		if($this->db->affected_rows())
 			return true;
 		return false;
+	}
+
+	public function get($columns = "*", $format = 'object'){
+		$this->db->select($columns);
+		$res = $this->db->get($this->table);
+
+		if( $res->num_rows() > 0 )
+			return $format == 'array' ? $res->result_array() : $res->results();
+		return array();
 	}
 
 }

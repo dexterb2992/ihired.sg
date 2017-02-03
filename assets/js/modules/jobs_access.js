@@ -13,10 +13,13 @@
             s_function = $("#select_function"),
             btn_add_access = $("#btn_add_access");
 
-        var paging = new Select2PagingPlugin();
-        paging.init(s_user, users);
-        paging.init(s_company, companies);
-        paging.init(s_function, functions);
+        var i_users = new Select2PagingPlugin(),
+            i_companies = new Select2PagingPlugin(),
+            i_functions = new Select2PagingPlugin();
+            
+        i_users.init(s_user, users);
+        i_companies.init(s_company, companies);
+        i_functions.init(s_function, functions);
 
     });
 
