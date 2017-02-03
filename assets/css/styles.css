@@ -1223,6 +1223,7 @@ hr {
     padding: 20px 40px 0 40px;
 }	
 
+/* modify modal */
 .modal h5, .modal h4 {
   font-family: "News Cycle", "Arial Narrow Bold", sans-serif;
   font-weight: 700;
@@ -1251,7 +1252,22 @@ h4.modal-title {
     font-size: 1.4em;
     font-weight: bold;
 }
-	
+
+/* change select2 clear option */
+span.select2-selection__clear {
+    border-radius: 8px;
+    width: 17px;
+    text-align: center;
+    height: 16px;
+    padding-top: 0;
+    background: rgba(128, 128, 128, 0.64);
+    color: white !important;
+    font-size: 12px;
+}
+
+.select2-container--bootstrap .select2-selection__clear:hover {
+    background: gray;
+}	
 	
 	
 	

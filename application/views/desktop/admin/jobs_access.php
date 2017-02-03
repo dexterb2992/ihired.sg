@@ -5,34 +5,37 @@
 <div class="user-container">
     <div class="user-container-head">Job Posting Access</div>
     <div class="user-content">
-        <h2 class="user-content-head"></h2>
+        <h2 class="user-content-head">Job Posting Access</h2>
         <div id="m_access">
             <script>
                 var functions = <?= json_encode($functions); ?>;
                 var companies = <?= json_encode($companies); ?>;
                 var users = <?= json_encode($users); ?>;
+                var jobs_access = <?= json_encode($jobs_access); ?>;
             </script>
 
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-inline">
-                        <div class="form-group">
-                            <select class="form-control" id="select_user" data-text="User Name"  data-allow-clear="true"></select>
-                        </div>
-                        <div class="form-group">
+            <table class="table borderless table-responsive">
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="text" id="select_user" placeholder="User Name" class="form-control input-sm frm_add_element"/>
+                            <input type="hidden" id="selected_user_id">
+                        </td>
+                        <td>
                             <select class="form-control" id="select_company" data-text="------- Select Company -------"  data-allow-clear="true"></select>
-                        </div>
-                        <div class="form-group">
+                        </td>
+                        <td>
                             <select class="form-control" id="select_function" data-text="Select Function"  data-allow-clear="true"></select>
-                        </div>
-                        <div class="form-group">
+                        </td>
+                        <td>
                             <button id="btn_add_access" class="btn btn-sm user-btn">Update</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <table class="table table-striped margin-top table-responsive display datatable" id="tbl_companies">
+
+            <table class="table table-striped margin-top table-responsive display" id="tbl_jobs_access">
                 <thead class="red-table-header">
                     <tr>
                         <th>User Name</th>
@@ -73,6 +76,7 @@
     </div>
 </div>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
 
 <?php $this->load->view('includes/footer'); ?>
