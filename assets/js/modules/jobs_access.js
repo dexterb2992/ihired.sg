@@ -24,15 +24,24 @@
 
         s_user.autocomplete({
             source: users,
+            minLength:0,
             select: function (event, ui) {
                 console.log(ui.item);
                 $("#select_user").val(ui.item.label); // display the selected text
                 selected_user_id.val(ui.item.value); // save selected id to hidden input
                 return false;
             },
-            change: function( event, ui ) {
-                selected_user_id.val( ui.item? ui.item.value : null );
+            // keyup: function( event, ui ) {
+            //     selected_user_id.val( ui.item? ui.item.value : null );
+            // },
+            response: function(event, ui) {
+                // ui.content is the array that's about to be sent to the response callback.
+                if (ui.content.length === 0) {
+                    selected_user_id.val("");
+                }
             } 
+        }).on('focus', function() { 
+            $(this).keydown(); 
         });
 
         var dt_jobs_access = $("#tbl_jobs_access").DataTable({
