@@ -3,8 +3,8 @@ class Jobaccess_model extends CI_Model {
 	
 	public function __construct(){
 		parent::__construct();
-		$this->table = "job_access_master";
-		$this->table_id = "job_access_id";
+		$this->table = "jobs_access";
+		$this->table_id = "jobs_access_id";
 	}
 
 	public function all($format = 'object'){
