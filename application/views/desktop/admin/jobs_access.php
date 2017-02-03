@@ -1,6 +1,6 @@
 <?php $this->load->view('includes/navi_in'); ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css">
-<link rel="stylesheet" href="<?= asset_url('css/select2-bootstrap.css'); ?>">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.6/select2-bootstrap.min.css">
 
 <div class="user-container">
     <div class="user-container-head">Job Posting Access</div>
@@ -17,13 +17,13 @@
                 <div class="col-md-12">
                     <div class="form-inline">
                         <div class="form-group">
-                            <select class="form-control" id="select_user" data-placeholder="User Name"></select>
+                            <select class="form-control" id="select_user" data-text="User Name"  data-allow-clear="true"></select>
                         </div>
                         <div class="form-group">
-                            <select class="form-control" id="select_company" data-placeholder="------- Select Company -------"></select>
+                            <select class="form-control" id="select_company" data-text="------- Select Company -------"  data-allow-clear="true"></select>
                         </div>
                         <div class="form-group">
-                            <select class="form-control" id="select_function" data-placeholder="Select Function"></select>
+                            <select class="form-control" id="select_function" data-text="Select Function"  data-allow-clear="true"></select>
                         </div>
                         <div class="form-group">
                             <button id="btn_add_access" class="btn btn-sm user-btn">Update</button>
@@ -73,7 +73,6 @@
     </div>
 </div>
 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
 
 <?php $this->load->view('includes/footer'); ?>

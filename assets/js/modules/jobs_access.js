@@ -16,7 +16,7 @@
         var i_users = new Select2PagingPlugin(),
             i_companies = new Select2PagingPlugin(),
             i_functions = new Select2PagingPlugin();
-            
+
         i_users.init(s_user, users);
         i_companies.init(s_company, companies);
         i_functions.init(s_function, functions);
@@ -41,8 +41,8 @@
         /* @since select2 v4.0 */
         $.fn.select2.amd.require(["select2/data/array", "select2/utils"],
             function (ArrayData, Utils) {
-                function CustomData($element, options) {
-                    CustomData.__super__.constructor.call(this, $element, options);
+                function CustomData($select2ement, options) {
+                    CustomData.__super__.constructor.call(this, $select2ement, options);
                 }
                 Utils.Extend(CustomData, ArrayData);
 
@@ -70,9 +70,13 @@
 
                 
                 $target.select2({
-                    ajax: {},
+                    width:'100%',
+                    theme: 'bootstrap',
                     dataAdapter: CustomData,
-                    placeholder: $(this).attr("data-placeholder")
+                    placeholder: {
+                        id: -1,
+                        text: $target.attr("data-text")
+                    }
                 });
                 
             }
