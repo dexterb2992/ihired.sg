@@ -10,7 +10,7 @@ class User extends CI_Controller{
 		}
 
 		$this->class = $this->router->class;
-		$this->load->model('User_master_model', 'user', true);
+		$this->load->model('User_model', 'user', true);
 	}
 
 

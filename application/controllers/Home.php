@@ -10,7 +10,7 @@ class Home extends CI_Controller {
 			redirect( base_url('dashboard/index') );
 		}
 
-		$this->load->model('User_master_model', 'user', TRUE);
+		$this->load->model('User_model', 'user', TRUE);
 	}
 
 	public function index()

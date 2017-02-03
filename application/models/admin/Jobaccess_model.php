@@ -10,8 +10,9 @@ class Jobaccess_model extends CI_Model {
 	public function all($format = 'object'){
 		$res = $this->db->get($this->table);
 
-		$this->db->select("{$this->table}.*, t2.industry_name");
-	    $this->db->join("industry_master as t2", "{$this->table}.industry_id = t2.industry_id", 'INNER');
+		$this->db->select("{$this->table}.{$this->table_id},user.full_name,function.function_name,date");
+	    $this->db->join("user_master as user", "{$this->table}.user_id = user.user_id", 'INNER');
+	    $this->db->join("function_master as function", "{$this->table}.function_id = function.function_id", 'INNER');
 	    $res = $this->db->get($this->table);
 	    
 		switch ($format) {

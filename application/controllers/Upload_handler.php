@@ -11,7 +11,7 @@ class Upload_handler extends CI_Controller {
 		$this->method 		= $this->router->method;
 		$this->module_url = $this->class.'/'.$this->method;
 
-		$this->load->model('User_master_model', 'user', true);
+		$this->load->model('User_model', 'user', true);
 	}
 
 	public function index() {

@@ -1,32 +1,36 @@
 <?php $this->load->view('includes/navi_in'); ?>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
+
 <div class="user-container">
     <div class="user-container-head">Job Posting Access</div>
     <div class="user-content">
-        <h2 class="user-content-head">Manage Company</h2>
-        <div id="m_company">
+        <h2 class="user-content-head"></h2>
+        <div id="m_access">
             <script>
-                var industries = <?= json_encode($industries); ?>;
+                var functions = <?= json_encode($functions); ?>;
                 var companies = <?= json_encode($companies); ?>;
+                var users = <?= json_encode($users); ?>;
             </script>
-            <table class="table borderless">
-                <tr>
-                    <th width="30%">Company Name</th>
-                    <th width="25%">Industry</th>
-                    <th width="10%">&nbsp;</th>
-                </tr>
-                <tr>
-                    <input type="hidden" name="co_id" value="-1">
-                    <td>
-                        <input type="text" name="company_name" id="txt_company" class="form-control input-sm frm_add_element">
-                    </td>
-                    <td>
-                        <input type="text" name="industry" id="txt_industry" class="form-control input-sm frm_add_element">
-                    </td>
-                    <td>
-                        <input type="button" id="btn_add_company" class="btn btn-sm user-btn btn-noradius" value="Update">
-                    </td>
-                </tr>
-            </table>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <select class="form-control" id="select_user" data-placeholder="User Name"></select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="select_company" data-placeholder="------- Select Company -------"></select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="select_function" data-placeholder="Select Function"></select>
+                        </div>
+                        <div class="form-group">
+                            <a href="#!" id="btn_add_access" class="btn btn-primary">Update</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <table class="table table-striped margin-top display datatable" id="tbl_companies">
                 <thead class="red-table-header">
@@ -38,18 +42,17 @@
                 </thead>
                 <tbody>
                 <?php
-                foreach ($companies as $key => $company) :
+                foreach ($job_access as $key => $access) :
                 ?>
-                    <tr data-id="<?= $company['company_id']; ?>">
+                    <tr data-id="<?= $access['job_access_id']; ?>">
                         <td class="vert-align">
-                            <?= ucwords($company['company_name']); ?>
+                            <?= ucwords($access['full_name']); ?>
                         </td>
                         <td class="vert-align">
-                            <?= $company['industry_name']; ?>
+                            <?= $access['function_name']; ?>
                         </td>
                         <td class="vert-align">
-                            <button type="button" class="btn btn-primary btn-xs btn-noradius btn-edit-company" data-id="<?= $company['company_id']; ?>">Edit</button>
-                            <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-company" data-id="<?= $company['company_id']; ?>">Delete</button>
+                            <button type="button" class="btn btn-primary btn-xs btn-delete-access trash-ikon" data-id="<?= $access['job_access_id']; ?>"></button>
                         </td>
                     </tr>
                 <?php

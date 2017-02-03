@@ -2,7 +2,7 @@
 
 class Country extends CI_Controller {
 
-	public function __construct()	{
+	public function __construct(){
 
 		parent::__construct();
 		$this->module 		= basename(dirname(__DIR__));

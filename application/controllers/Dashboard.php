@@ -7,7 +7,7 @@ class Dashboard extends CI_Controller{
 			redirect( base_url('/') );
 		}
 
-		$this->load->model('User_master_model', 'user', true);
+		$this->load->model('User_model', 'user', true);
 
 		$this->quick_modules = array(
 			array(
