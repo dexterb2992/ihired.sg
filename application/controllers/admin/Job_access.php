@@ -12,6 +12,7 @@ class Job_access extends CI_Controller {
 		$this->load->model('User_model', 'user', true);
 		$this->load->model('admin/Company_model', 'company', true);
 		$this->load->model('admin/Function_model', 'function', true);
+		$this->load->model('admin/Jobaccess_model', 'job_access', true);
 	}
 
 	public function index(){
