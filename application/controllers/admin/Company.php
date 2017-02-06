@@ -80,6 +80,12 @@ class Company extends CI_Controller {
 		echo json_encode($res);
 	}
 
+	public function edit($id){
+		$data = array();
+		$data['company'] = $this->company->find($id);
+		$this->load->view('desktop/admin/edit_company', $data);
+	}
+
 	public function delete(){
 		$id = $this->input->post('id');
 

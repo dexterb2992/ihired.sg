@@ -768,8 +768,9 @@ FLOAT RIGHT
 		-ms-transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 		transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 	}*/
-	a:link { color:#868686; 
-	-webkit-transition: color 1s ease-in;
+	a:link { 
+		color:#868686; 
+		-webkit-transition: color 1s ease-in;
 		-moz-transition: color 1s ease-in;
         -ms-transition: color 1s ease-in;
         -o-transition: color 1s ease-in;
@@ -1269,7 +1270,10 @@ span.select2-selection__clear {
     background: gray;
 }	
 	
-	
+/* link button */
+a.btn {
+	color: white;
+}
 	
 	
 	

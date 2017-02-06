@@ -48,7 +48,8 @@
                             <?= $company['industry_name']; ?>
                         </td>
                         <td class="vert-align">
-                        	<button type="button" class="btn btn-primary btn-xs btn-noradius btn-edit-company" data-id="<?= $company['company_id']; ?>">Edit</button>
+                        	<!-- <button type="button" class="btn btn-primary btn-xs btn-noradius btn-edit-company" data-id="<?= $company['company_id']; ?>">Edit</button> -->
+                            <a class="btn btn-primary btn-xs btn-noradius btn-edit-company" href="<?= base_url('admin/company/edit/'.$company['company_id']); ?>">Edit</a>
                             <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-company" data-id="<?= $company['company_id']; ?>">Delete</button>
                         </td>
                     </tr>
