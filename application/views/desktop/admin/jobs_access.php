@@ -63,7 +63,9 @@
                             <?= $access['date']; ?>
                         </td>
                         <td class="vert-align">
-                            <button type="button" class="btn btn-primary btn-xs btn-delete-access trash-ikon" data-id="<?= $access['jobs_access_id']; ?>"></button>
+                            <button type="button" class="btn btn-primary btn-xs btn-delete-access" data-id="<?= $access['jobs_access_id']; ?>" title="Delete">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </button>
                         </td>
                     </tr>
                 <?php

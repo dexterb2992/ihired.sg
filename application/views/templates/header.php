@@ -8,43 +8,45 @@
 
 		<title>iHired Dashboard</title>
 
-		<link rel="shortcut icon" href="<?php asset_url("dashboard/images/favicons.png"); ?>" type="image/x-icon" />
+		<link rel="shortcut icon" href="<?= asset_url("images/favicons.png"); ?>" type="image/x-icon" />
 		<!-- Bootstrap 3 -->
-		<link rel="stylesheet" href="<?php asset_url("dashboard/bootstrap/css/bootstrap.css"); ?>" />
-		<link rel="stylesheet" href="<?php asset_url("css/jquery-ui.css"); ?>" />
-		<link rel="stylesheet" href="<?php asset_url("css/global.css"); ?>" />
-		<link rel="stylesheet" href="<?php asset_url("dashboard/css/normalize.css") ?>" />
-	    <link rel="stylesheet" href="<?php asset_url("dashboard/css/main.css") ?>" />
-		<link rel="stylesheet" href="<?php asset_url("dashboard/css/styles.css") ?>" />
-		<link rel="stylesheet" type="text/css" href="<?php asset_url("dashboard/menu.css") ?>" />
-		<link rel="stylesheet" type="text/css" href="<?php asset_url("dashboard/css/dashboard_container.css") ?>" />
-		<link rel="stylesheet" href="<?php asset_url("jquery-plugin/colorbox/css/colorbox.css"); ?>" />
+		<link rel="stylesheet" href="<?= asset_url("jquery-plugin/bootstrap/css/bootstrap.css"); ?>" />
+		<link rel="stylesheet" href="<?= asset_url("jquery-plugin/chosen/css/bootstrap-chosen.css"); ?>">
+		<link rel="stylesheet" href="<?= asset_url("css/jquery-ui.css"); ?>" />
+		<link rel="stylesheet" href="<?= asset_url("css/menu.css") ?>" />
+		<link rel="stylesheet" href="<?= asset_url("css/global.css"); ?>" />
+		<link rel="stylesheet" href="<?= asset_url("css/normalize.css") ?>" />
+	    <link rel="stylesheet" href="<?= asset_url("css/main.css") ?>" />
+		<link rel="stylesheet" href="<?= asset_url("css/styles.css") ?>" />
+		<link rel="stylesheet" href="<?= asset_url("css/dashboard_container.css") ?>" />
+		<link rel="stylesheet" href="<?= asset_url("jquery-plugin/colorbox/css/colorbox.css"); ?>" />
 
 		<script>
 			var base_url  = '<?= base_url(); ?>';
 		</script>
 
-		<script src="<?php asset_url("_script/jquery-1.9.1.js"); ?>"></script>
-		<script src="<?php asset_url("_script/jquery.validate.min.js"); ?>"></script>
-		<script src="<?= asset_url("dashboard/bootstrap/js/bootstrap.min.js"); ?>"></script>
-		<script src="<?php asset_url("_script/jquery-ui.js"); ?>"></script>
-		<script src="<?= file_url("jquery/monthpicker/jquery.mtz.monthpicker.js"); ?>"></script>
-		<script src="<?php asset_url("jquery-plugin/colorbox/js/jquery.colorbox.js"); ?>" ></script>
-		<script src="<?php asset_url("jquery-plugin/bootbox.min.js"); ?>" ></script>
-		<script src="<?php asset_url("dashboard/js/common.js"); ?>"></script>
-		<script src="<?php asset_url("sitejs/global.js"); ?>"></script>
-		<script src="<?php asset_url("sitejs/autosuggest.js"); ?>"></script>
-		<script src="<?php asset_url("dashboard/js/main.js"); ?>"></script>
+		<script src="<?= asset_url("js/jquery-3.1.1.min.js"); ?>"></script>
+		<script src="<?= asset_url("js/jquery-migrate-3.0.0.js"); ?>"></script>
+		<script src="<?= asset_url("jquery-plugin/jquery.validate.min.js"); ?>"></script>
+		<script src="<?= asset_url("jquery-plugin/bootstrap/js/bootstrap.min.js"); ?>"></script>
+		<script src="<?= asset_url("jquery-plugin/chosen/js/chosen.jquery.js"); ?>"></script>
+		<script src="<?= asset_url("js/jquery-ui.js"); ?>"></script>
+		<script src="<?= asset_url("jquery-plugin/bootbox.min.js"); ?>" ></script>
+		<script src="<?= asset_url("js/common.js"); ?>"></script>
+		<script src="<?= asset_url("js/menu.js"); ?>"></script>
+		<script src="<?= asset_url("sitejs/global.js"); ?>"></script>
+		<script src="<?= asset_url("sitejs/autosuggest.js"); ?>"></script>
+		<script src="<?= asset_url("js/main.js"); ?>"></script>
 
 
-		<link type="text/css" rel="stylesheet" href="<?php jquery_asset_url("datatable/css/datatable.css"); ?>" />
-		<script src="<?php jquery_asset_url("datatable/js/jquery.dataTables.min.js"); ?>"></script>
+		<link rel="stylesheet" href="<?= asset_url("jquery-plugin/dataTables/css/jquery.dataTables.css"); ?>" />
+		<script src="<?= asset_url("jquery-plugin/dataTables/js/jquery.dataTables.js"); ?>"></script>
 
-        <!-- <script src="<?php asset_url("_script/jquery.jgrowl.js"); ?>"></script>
-        <link rel="stylesheet" href="<?php asset_url("css/jquery.jgrowl.css"); ?>" /> -->
+        <!-- <script src="<?= asset_url("js/jquery.jgrowl.js"); ?>"></script>
+        <link rel="stylesheet" href="<?= asset_url("css/jquery.jgrowl.css"); ?>" /> -->
         
-        <script src="<?= file_url("jquery/dropareaa.js"); ?>"></script>
-        <script src="<?= asset_url('dashboard/js/SimpleAjaxUploader.js'); ?>"></script>
+        <!-- <script src="<?= file_url("jquery/dropareaa.js"); ?>"></script> -->
+        <script src="<?= asset_url('js/SimpleAjaxUploader.js'); ?>"></script>
 		<style>
             .dropareaa {
                 position:relative;
@@ -196,7 +198,7 @@
 		                <p>Quick Links</p>
 
 		                <div class="logout2"></div>
-						<a href="<?= base_url('dashboard/logout'); //echo $this->current_user['logout_url']; ?>"><div class="logouttext">Logout</div></a>
+						<a href="<?= base_url('logout'); //echo $this->current_user['logout_url']; ?>"><div class="logouttext">Logout</div></a>
 
 	                </div> <!--end of quickmenu-->
 
@@ -245,26 +247,6 @@
 					        var uploadBtn = document.getElementById('uploadBtn');
 
 					        $("#deleteBtn").on('click', function() {
-					            // var ans = confirm('Are you sure?');
-					            // if (ans) {
-					            //     var imgd = $("#readableImg").val();
-					            //     $.ajax({
-					            //         url: base_url + 'user/delete_dashimage',
-					            //         type: 'post',
-					            //         data: {
-					            //             imgd: imgd
-					            //         },
-					            //         success: function() {
-					            //             picBox.src = base_url + 'assets/images/pix.jpg';
-					            //             // $("#img_ctrl_cont").html($("#uploadBtn"));
-					            //             $("#uploadBtn").removeClass('hide');
-					            //             $("#deleteBtn").addClass('hide');
-					            //         }
-					            //     });
-					            // } else {
-					            //     return false;
-					            // }
-
 					            bootbox.confirm({
 								    title: "Confirmation",
 								    message: "Do you wish to remove this image?",

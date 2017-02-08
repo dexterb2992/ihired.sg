@@ -52,7 +52,7 @@
 			</div>
 			<div class="copy">
 				<div>
-					<div>Copyright 2013 - 2014 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Symphinite Solutions</div>
+					<div>Copyright 2017 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; iHired.sg</div>
 					<div>
 						<ul>
 							<li>Privacy & Security<span>|</span></li>
@@ -71,7 +71,6 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
 						<h5 class="modal-title">Change your Password</h5>
 					</div>
 					<div class="modal-body">

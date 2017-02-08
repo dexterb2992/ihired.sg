@@ -16,7 +16,7 @@ class Home extends CI_Controller {
 	public function index()
 	{
 		$data['js_module'] = 'index';
-		$this->load->view('sign_in2', $data);
+		$this->load->view('sign_in', $data);
 	}
 
 	public function login()
@@ -29,7 +29,7 @@ class Home extends CI_Controller {
 		$is_ok = true;
 
 		if (empty($signin)){
-			$this->load->view('sign_in2', $data);
+			$this->load->view('sign_in', $data);
 		}else{
 			$email_id = $this->input->post('email_id');
 			$password = $this->input->post('password');
@@ -45,7 +45,7 @@ class Home extends CI_Controller {
 				$data['has_error'] = !$is_ok;
 				$data['email_id'] = $email_id;
 
-				$this->parser->parse('sign_in2', $data);
+				$this->parser->parse('sign_in', $data);
 			}else{
 				// let's login
 				$user =  $this->user->authenticate($email_id, $password);
@@ -80,7 +80,7 @@ class Home extends CI_Controller {
 				}else{
 					$this->session->set_flashdata('msg', 'Email or password does not match our records.');
 					// $data = array();
-					$this->parser->parse('sign_in2', $data);
+					$this->parser->parse('sign_in', $data);
 				}
 				
 			}

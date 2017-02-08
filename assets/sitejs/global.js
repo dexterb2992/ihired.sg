@@ -209,10 +209,10 @@ $(function(){
     });
 
 	
-	$(".monthPicker").monthpicker({
-		pattern: "mmm-yyyy",
-		openOnFocus: true
-	});
+	// $(".monthPicker").monthpicker({
+	// 	pattern: "mmm-yyyy",
+	// 	openOnFocus: true
+	// });
 
 	
 

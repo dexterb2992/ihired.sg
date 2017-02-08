@@ -81,7 +81,7 @@ function form_custom_error($field = '', $attributes = null)
 
 function redirect_colorbox($uri)
 {
-	$script = "<script type='text/javascript' src='".asset_url("_script/jquery-1.9.1.js", false)."'></script>";
+	$script = "<script type='text/javascript' src='".asset_url("js/jquery-3.1.1.min.js", false)."'></script>";
 	$script .= "<script type='text/javascript' src='".asset_url("jquery-plugin/colorbox/js/jquery.colorbox.js", false)."'></script>";
 	$script .= "<script type='text/javascript'>";
 	$script .= "$(function(){
@@ -96,7 +96,7 @@ function redirect_colorbox($uri)
 
 function redirect_popup($uri)
 {
-	$script = "<script type='text/javascript' src='".asset_url("_script/jquery-1.9.1.js", false)."'></script>";
+	$script = "<script type='text/javascript' src='".asset_url("js/jquery-3.1.1.min.js", false)."'></script>";
 	$script .= "<script type='text/javascript' src='".asset_url("jquery-plugin/colorbox/js/jquery.colorbox.js", false)."'></script>";
 
 	$script .= "<script type='text/javascript'>";

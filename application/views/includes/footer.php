@@ -35,7 +35,7 @@
       <h5>info@ihired.sg</h5>
     </div>
     <div class=""><br>
-      <a href="#" style=""><img src="<?= asset_url('dashboard/images/logo.jpg'); ?>"></a><br><br>
+      <a href="#" style=""><img src="<?= asset_url('images/logo.jpg'); ?>"></a><br><br>
       <a href="http://ihired.sg/" style="border:1px solid #000; border-radius:5px;padding:8px 10px;color:#000">Go to <span style="color:#44517e">ihired.sg</span></a>
       <br><br>
     </div>

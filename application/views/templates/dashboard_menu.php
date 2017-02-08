@@ -2,7 +2,7 @@
 	
 
     <ul class="menu">
-        <li><a href="<?php echo base_url("dashboard/index"); ?>" class="parent"><span><img class="home-icon" src="<?php asset_url("dashboard/images/home-btn.png"); ?>" height="15" width="15"/></span></a></li>      
+        <li><a href="<?php echo base_url("dashboard/index"); ?>" class="parent"><span><img class="home-icon" src="<?php asset_url("images/home-btn.png"); ?>" height="15" width="15"/></span></a></li>      
           <?php if (@$this->top_modules) { foreach($this->top_modules as $module): ?>
 			<li>
 				<a href="<?php echo !empty($module['uri']) ? base_url($module['uri']) : "#"; ?>">
