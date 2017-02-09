@@ -5,6 +5,7 @@
 <script>
 	var industries = <?= json_encode($industries); ?>;
 	var countries = <?= json_encode($countries); ?>;
+	var currencies = <?= json_encode($currencies); ?>;
 </script>
 <div class="user-container">
     <div class="user-container-head">
@@ -17,7 +18,7 @@
     	</h2>
         <div id="m_company">        
         	<div class="row">
-        		<?= form_open( base_url("company/update"), array('class' => 'form') ); ?>
+        		<?= form_open( base_url("company/update"), array('class' => 'form', 'id' => 'form_update') ); ?>
 	        		<div class="col-md-3">
 	        			<div class="photo">
 							<div id="img_ctrl_cont">
@@ -34,7 +35,7 @@
 	        		<div class="col-md-6">
 	        			<div class="form-group">
 	        				<label for="company_name">Company Name</label>
-	        				<input id="company_name" class="form-control" type="text" value="<?= $company->company_name; ?>" name="company_name" placeholder="Company Name" />
+	        				<input id="company_name" class="form-control" type="text" value="<?= $company->company_name; ?>" name="company_name" placeholder="Company Name" required/>
 	        			</div>
 	        			<div class="row">
 	        				<div class="col-md-6">
@@ -71,8 +72,9 @@
 	        				</div>
 	        				<div class="col-md-6">
 	        					<div class="form-group">
-	        						<label for="currency_id">Currency</label>
-			        				<input id="currency_id" class="form-control" type="text" value="<?= $company->currency_id; ?>" name="currency_id" placeholder="Currency" />
+	        						<label for="currency">Currency</label>
+	        						<input type="hidden" name="currency_id" id="currency_id" value="<?= $company->country_id; ?>">
+			        				<input id="currency" class="form-control" type="text" value="<?= $company->currency; ?>" name="currency" placeholder="Currency" required/>
 			        			</div>
 	        				</div>
 	        			</div>
@@ -81,7 +83,7 @@
 	        			<div class="form-group">
 	        				<label for="country_id">Country</label>
 	        				<select name="country_id" id="country_id" class="form-control" data-text="Country">
-	        					<option value="<?= $company->country_id; ?>" selected>
+	        					<option value="<?= $company->country_id; ?>" selected required>
 	        						<?= $company->country_name; ?>
 	        					</option>
 	        				</select>
@@ -95,7 +97,7 @@
 	        				<textarea class="form-control" name="business_address" id="business_address"><?= $company->business_address; ?></textarea>
 	        			</div>
 	        			<div class="form-group">
-	        				<button type="submit" class="btn btn-primary">
+	        				<button type="submit" class="btn btn-primary" id="btn_submit">
 		        				<i class="glyphicon glyphicon-floppy-disk"></i> Save changes
 	        				</button>
 	        			</div>

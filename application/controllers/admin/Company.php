@@ -89,22 +89,45 @@ class Company extends Base_Controller {
 		$this->load->model('admin/Country_model', 'country', true);
 
 		$data = array();
+		$data['js_module'] = 'edit_company';
 		$data['company'] = $this->company->find($id);
 		$data['industries'] = $this->industry->get("industry_id as id, industry_name as text");
-		$data['countries'] = $this->country->get("country_id as id, country_name as text");
-		$data['js_module'] = 'edit_company';
-	
+		// $data['countries'] = $this->country->get("country_id as id, country_name as text");
+		// $data['countries'] = $this->country->get();
+		$countries = $this->country->get();
+		$data['countries'] = array();
+		$data['currencies'] = array();
+
 		foreach ($data['industries'] as $industry) {
 			if( $industry->id == $data['company']->industry_id ){
 				$data['company']->industry_name = $industry->text;
 			}
 		}
 
-		foreach ($data['countries'] as $country) {
-			if( $country->id == $data['company']->country_id ){
-				$data['company']->country_name = $country->text;
-			}
+		foreach ($countries as $country) {
+			// if( $country->id == $data['company']->country_id ){
+				// $data['company']->country_name = $country->text;
+				if( $country->country_id == $data['company']->country_id ){
+					$data['company']->country_name = $country->country_name;
+					$data['company']->currency = "$country->currency_name ($country->currency_symbol)";
+				}
+				
+				$currency = new stdClass();
+				$currency->label = "$country->currency_name ($country->currency_symbol)";
+				$currency->value = $country->country_id;
+				$data['currencies'][] = $currency;
+
+				$n_country = new stdClass();
+				$n_country->id = $country->country_id;
+				$n_country->text = $country->country_name;
+
+				$data['countries'][] = $n_country;
+			// }
 		}
+
+
+
+		// $data['currencies'] = $this->country->get("country_id as value, CONCAT(currency_name, ' (', currency_symbol, ')') as label");
 
 		$target_dir = $_SERVER['DOCUMENT_ROOT'].'/assets/images/company_logos/';
 		$imgd = base_url('assets/images/pix.jpg');
@@ -126,7 +149,9 @@ class Company extends Base_Controller {
 	 * Updates a company
 	 */
 	public function update(){
-
+		echo '<pre>';
+		print_r($this->input->post());
+		echo '/<pre>';
 	}
 
 	public function delete(){

@@ -377,10 +377,10 @@ $(function(){
 		    message: "Do you wish to change?",
 		    buttons: {
 		        cancel: {
-		            label: '<i class="fa fa-times"></i> No'
+		            label: '<i class="glyphicon glyphicon-remove"></i> No'
 		        },
 		        confirm: {
-		            label: '<i class="fa fa-check"></i> Yes'
+		            label: '<i class="glyphicon glyphicon-ok"></i> Yes'
 		        }
 		    },
 		    callback: function (ans) {
