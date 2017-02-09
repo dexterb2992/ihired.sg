@@ -39,6 +39,7 @@
     <script src="<?= asset_url('jquery-plugin/dataTables/js/jquery.dataTables.js'); ?>" ></script>
     <script src="<?= asset_url('jquery-plugin/dataTables/js/fnReloadAjax.js'); ?>" ></script>
     <script src="<?= asset_url('jquery-plugin/chosen/js/chosen.jquery.js'); ?>" ></script>
+    <script src="<?= asset_url('js/SimpleAjaxUploader.js'); ?>"></script>
   
     <script type="text/javascript">
       var base_url  = '<?= base_url(); ?>';

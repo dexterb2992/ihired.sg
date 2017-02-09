@@ -54,7 +54,7 @@ class JobsAccess_model extends CI_Model {
 	public function edit($id, $values){
 		$this->db->set($values);
 		$this->db->where($this->table_id, $id);
-		$this->update($this->table);
+		$this->db->update($this->table);
 
 		if( $this->db->affected_rows() )
 			return true;

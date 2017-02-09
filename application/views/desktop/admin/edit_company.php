@@ -19,6 +19,7 @@
         <div id="m_company">        
         	<div class="row">
         		<?= form_open( base_url("company/update"), array('class' => 'form', 'id' => 'form_update') ); ?>
+	        		<input type="hidden" id="company_id" name="company_id" value="<?= $company->company_id; ?>">
 	        		<div class="col-md-3">
 	        			<div class="photo">
 							<div id="img_ctrl_cont">
@@ -73,7 +74,7 @@
 	        				<div class="col-md-6">
 	        					<div class="form-group">
 	        						<label for="currency">Currency</label>
-	        						<input type="hidden" name="currency_id" id="currency_id" value="<?= $company->country_id; ?>">
+	        						<input type="hidden" name="currency_id" id="currency_id" value="<?= $company->currency_id; ?>">
 			        				<input id="currency" class="form-control" type="text" value="<?= $company->currency; ?>" name="currency" placeholder="Currency" required/>
 			        			</div>
 	        				</div>
@@ -98,7 +99,8 @@
 	        			</div>
 	        			<div class="form-group">
 	        				<button type="submit" class="btn btn-primary" id="btn_submit">
-		        				<i class="glyphicon glyphicon-floppy-disk"></i> Save changes
+		        				<i class="glyphicon glyphicon-floppy-disk"></i>
+		        				<span>Save changes</span>
 	        				</button>
 	        			</div>
 	        		</div>

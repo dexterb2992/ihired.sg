@@ -168,6 +168,7 @@ class User extends Base_Controller{
 
 		$u_id = $this->session->userdata('user_id');
 		$this->user->remove_image($u_id);
+		$this->session->set_userdata('user_image', null);
 	}
 
 }

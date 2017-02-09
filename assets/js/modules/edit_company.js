@@ -15,14 +15,21 @@
         	sb_industry = $("#industry_id"),
             txt_currency = $("#currency"),
             currency_id = $("#currency_id"),
+            company_id = $("#company_id"),
             btn_submit = $("#btn_submit"),
-            form_update = $("#form_update");
+            form_update = $("#form_update"),
+            deleteBtn = $("#deleteBtn"),
+            picBox = $('#picBox'),
+            uploadBtn = $('#uploadBtn'),
+            hasImg = $("#hasImg"),
+            readableImg = $("#readableImg");
 
         var i_country = new Select2PagingPlugin(),
         	i_industry = new Select2PagingPlugin();
 
         i_country.init(sb_country, countries);
         i_industry.init(sb_industry, industries);
+
         txt_currency.autocomplete({
             source: currencies,
             minLength:0,
@@ -52,7 +59,8 @@
                 dataType: 'json',
                 data: data,
                 beforeSend: function (){
-                    btn_submit.addClass("disabled").attr("disabled", "disabled").text("Please wait...");
+                    btn_submit.addClass("disabled").attr("disabled", "disabled")
+                        .children("span").text("Please wait...");
                 },
                 success: function (data){
                     if( data.success ){
@@ -64,11 +72,79 @@
                 error: function (data){
                     console.warn(data);
                     flashdata_status('Whoops! Something went wrong. Please try again later.');
+                    btn_submit.removeClass("disabled").removeAttr("disabled")
+                        .children("span").text("Save Changes");
                 }
             }).done(function (){
-                btn_submit.removeClass("disabled").removeAttr("disabled").text("Save Changes");
+                btn_submit.removeClass("disabled").removeAttr("disabled")
+                    .children("span").text("Save Changes");
             });
         });
+
+
+        if (hasImg.val() == 'hasImg') {
+            deleteBtn.removeClass('hide');
+            uploadBtn.addClass('hide');
+        } else {
+            uploadBtn.removeClass('hide');
+            deleteBtn.addClass('hide');
+        }
+
+        deleteBtn.on('click', function() {
+            bootbox.confirm({
+                title: "Confirmation",
+                message: "Do you wish to remove this image?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="glyphicon glyphicon-remove"></i> No'
+                    },
+                    confirm: {
+                        label: '<i class="glyphicon glyphicon-ok"></i> Yes'
+                    }
+                },
+                callback: function (ans) {
+                    if (ans) {
+                        $.ajax({
+                            url: base_url + 'admin/company/delete_logo/'+company_id.val(),
+                            type: 'post',
+                            dataType: 'json',
+                            success: function(data) {
+                                if( data.success == true ){
+                                    picBox.attr("src", base_url + 'assets/images/pix.jpg');
+                                    uploadBtn.removeClass('hide');
+                                    deleteBtn.addClass('hide');
+                                }else{
+                                    flashdata_status("Sorry, we're not able to upload your file right now.")
+                                    console.warn(data);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        var uploader = new ss.SimpleUpload({
+            button: uploadBtn,
+            url: base_url + 'admin/company/update_logo/'+company_id.val(),
+            name: 'uploadfile',
+            responseType: 'json',
+            onSubmit: function() {
+                uploadBtn.addClass('hide');
+                deleteBtn.removeClass('hide');
+            },
+            onComplete: function(filename, response) {
+                console.log(response);
+                if (response.success) {
+                    picBox.attr("src", response.newFile + "?foo=" + new Date().getTime());
+                }
+                
+            },
+            onError: function() {
+                flashdata_status("Unable to upload file.");
+            }
+        });
+
     });
 
     // The rest of the codes goes here

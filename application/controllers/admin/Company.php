@@ -149,9 +149,88 @@ class Company extends Base_Controller {
 	 * Updates a company
 	 */
 	public function update(){
-		echo '<pre>';
-		print_r($this->input->post());
-		echo '/<pre>';
+		$this->form_validation->set_rules('company_name', 'Company Name', 'xss_clean|required|trim');
+		$this->form_validation->set_rules('country_id', 'Country', 'xss_clean|required|trim');
+		$this->form_validation->set_rules('industry_id', 'Industry', 'required|trim');
+		$this->form_validation->set_rules('currency_id', 'Currency', 'required|trim');
+
+		$response = array(
+			'success' => false, 
+			'msg' => "No Changes has been saved." 
+		);
+
+		if($this->form_validation->run() != true){
+			$response['msg'] = validation_errors();
+			$response['success'] = false;
+		}else{
+			$data = $this->input->post();
+
+			$company = array(
+			    "company_name" => $data["company_name"],
+			    "telephone_no" => $data["telephone_no"],
+			    "fax_no" => $data["fax_no"],
+			    "website" => $data["website"],
+			    "career_site" => $data["career_site"],
+			    "industry_id" => $data["industry_id"],
+			    "currency_id" => $data["currency_id"],
+			    "country_id" => $data["country_id"],
+			    "business_registration_no" => $data["business_registration_no"],
+			    "business_address" => $data["business_address"]
+			);
+
+			if( $this->company->edit($data["company_id"], $company) ){
+				$response['msg'] = 'Your changes have been saved.';
+				$response['success'] = true;
+			}
+		}
+
+		echo json_encode($response);
+	}
+
+	public function update_logo($id){
+		require_once APPPATH.'libraries/Uploader.php';
+
+		$upload_dir = $_SERVER['DOCUMENT_ROOT'].'/assets/images/company_logos/';
+		$valid_extensions = array( 'png', 'jpeg', 'jpg');
+		$uploader 	= new FileUpload('uploadfile');
+
+		$u_id = $this->input->post('id');
+		$ext 	= $uploader->getExtension();
+		$uploader->newFileName = $u_id.'.'.$ext;
+
+		// Handle the upload
+		$result = $uploader->handleUpload($upload_dir, $valid_extensions);
+
+		if (!$result) {
+		  exit(json_encode(array('success' => false, 'msg' => $uploader->getErrorMsg())));  
+		}
+
+		// save new logo
+		$values = array(
+			"logo" => $uploader->newFileName
+		);
+
+		$this->company->edit($id, $values);
+
+		echo json_encode(
+			array('success' => true,
+				'newFile' => base_url('assets/images/company_logos/'.$uploader->newFileName) 
+			)
+		);
+	}
+
+	public function delete_logo($id){
+		$values = array(
+			"logo" => null
+		);
+
+		$response = array('success' => false);
+
+		if( $this->company->edit($id, $values) ){
+			$response = array('success' => true);
+		}
+
+		echo json_encode( $response );
 	}
 
 	public function delete(){
