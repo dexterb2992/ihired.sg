@@ -198,7 +198,7 @@
 		                <p>Quick Links</p>
 
 		                <div class="logout2"></div>
-						<a href="<?= base_url('logout'); //echo $this->current_user['logout_url']; ?>"><div class="logouttext">Logout</div></a>
+						<a href="<?= base_url('dashboard/logout'); //echo $this->current_user['logout_url']; ?>"><div class="logouttext">Logout</div></a>
 
 	                </div> <!--end of quickmenu-->
 

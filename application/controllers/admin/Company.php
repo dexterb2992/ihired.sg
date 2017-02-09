@@ -1,10 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+require APPPATH."controllers/Base_Controller.php";
 
-class Company extends CI_Controller {
+class Company extends Base_Controller {
 
 	public function __construct(){
 	
 		parent::__construct();
+
 		$this->module = basename(dirname(__DIR__));
 		$this->class = $this->router->class;
 		$this->method = $this->router->method;
@@ -80,10 +82,51 @@ class Company extends CI_Controller {
 		echo json_encode($res);
 	}
 
+	/**
+	 * Displays a view to edit a company
+	 */
 	public function edit($id){
+		$this->load->model('admin/Country_model', 'country', true);
+
 		$data = array();
 		$data['company'] = $this->company->find($id);
+		$data['industries'] = $this->industry->get("industry_id as id, industry_name as text");
+		$data['countries'] = $this->country->get("country_id as id, country_name as text");
+		$data['js_module'] = 'edit_company';
+	
+		foreach ($data['industries'] as $industry) {
+			if( $industry->id == $data['company']->industry_id ){
+				$data['company']->industry_name = $industry->text;
+			}
+		}
+
+		foreach ($data['countries'] as $country) {
+			if( $country->id == $data['company']->country_id ){
+				$data['company']->country_name = $country->text;
+			}
+		}
+
+		$target_dir = $_SERVER['DOCUMENT_ROOT'].'/assets/images/company_logos/';
+		$imgd = base_url('assets/images/pix.jpg');
+		$data['company']->hasImg = '';
+
+		if($data['company']->logo != null) {
+			$data['company']->hasImg = 'hasImg';
+			$imgd  = base_url('assets/images/company_logos').'/'.$data['company']->logo;
+		}
+
+		$data['company']->logo_dir = $target_dir.$data['company']->logo;
+		$data['company']->logo = $imgd;
+		
+
 		$this->load->view('desktop/admin/edit_company', $data);
+	}
+
+	/**
+	 * Updates a company
+	 */
+	public function update(){
+
 	}
 
 	public function delete(){

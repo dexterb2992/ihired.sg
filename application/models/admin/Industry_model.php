@@ -1,15 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Industry_model extends CI_Model {
-	protected $table;
-	protected $table_id;
 
 	public function __construct(){
 		parent::__construct();
-		$table = "industry_master";
-		$table_id = "industry_id";
-		$this->table = $table;
-		$this->table_id = $table_id;
+		$this->table = "industry_master";
+		$this->table_id = "industry_id";
 	}
 
 	public function all($format = 'object'){
@@ -84,5 +80,15 @@ class Industry_model extends CI_Model {
 			return true;
 		return false;
 	}
+
+	public function get($columns = "*", $format = 'object'){
+		$this->db->select($columns);
+		$res = $this->db->get($this->table);
+
+		if( $res->num_rows() > 0 )
+			return $format == 'array' ? $res->result_array() : $res->result();
+		return array();
+	}
+	
 
 }

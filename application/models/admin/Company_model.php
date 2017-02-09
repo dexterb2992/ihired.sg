@@ -95,7 +95,7 @@ class Company_model extends CI_Model{
 		$res = $this->db->get($this->table);
 
 		if( $res->num_rows() > 0 )
-			return $format == 'array' ? $res->result_array() : $res->results();
+			return $format == 'array' ? $res->result_array() : $res->result();
 		return array();
 	}
 

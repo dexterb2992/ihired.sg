@@ -48,3 +48,60 @@ function flashdata_status(data, type) {
 
 	$('#f_msg').html(wrap).fadeIn("slow", function() { $(this).delay(5000).fadeOut("slow"); });
 }
+
+function Select2PagingPlugin() {
+    var _dataSource = null;
+    var _pageSize = 20;
+    var $target = null;
+    
+    this.init = function(target, dataSource, pageSize) {
+        _dataSource = dataSource;
+        $target = target;
+    if (pageSize)
+        _pageSize = pageSize;
+    }
+    
+    /* @since select2 v4.0 */
+    $.fn.select2.amd.require(["select2/data/array", "select2/utils"],
+        function (ArrayData, Utils) {
+            function CustomData($select2ement, options) {
+                CustomData.__super__.constructor.call(this, $select2ement, options);
+            }
+            Utils.Extend(CustomData, ArrayData);
+
+            CustomData.prototype.query = function (params, callback) {
+                if (!params.page) {
+                    params.page = 1;
+                }
+                var results = null;
+                if (params.term == undefined) {
+                    // results = _dataSource.slice(0, _pageSize); // use _pageSize to disable infinite loading
+                    results = _dataSource.slice(0, _dataSource.length); // 
+                }
+                else {
+                    results = _.filter(_dataSource, function(item) { 
+                        return (item.text.toLowerCase().indexOf(params.term.toLowerCase()) >= 0);
+                    }); 
+                }
+                
+                var data = {};
+                data.results = results.slice((params.page - 1) * _pageSize, params.page * _pageSize);
+                data.pagination = {};
+                data.pagination.more = params.page * _pageSize < _dataSource.length;
+                callback(data);
+            };
+
+            
+            $target.select2({
+                width:'100%',
+                theme: 'bootstrap',
+                dataAdapter: CustomData,
+                placeholder: {
+                    id: -1,
+                    text: $target.attr("data-text")
+                }
+            });
+            
+        }
+    );
+}

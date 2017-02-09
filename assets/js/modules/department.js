@@ -58,23 +58,7 @@ $(function() {
 	$('body').on('click', '.rm_de', function() {
 
 	  	var ctr = ($(this).attr('id')).split('_');
-	  	// var ans = confirm('Do you wish to delete?');
 
-	  	// if(ans) {
-	  	// 	$.ajax({
-	  	// 		url : base_url + 'admin/department/delete_department',
-	  	// 		data: { deId : ctr[2] },
-	  	// 		dataType: 'JSON',
-	  	// 		type: 'POST',
-	  	// 		success: function(data) {
-	  	// 			if(data.data==true) {
-	  	// 				$("#tr_de_"+ctr[2]).fadeOut('slow');
-	  	// 			}
-	  	// 		}
-	  	// 	});
-	  	// } else {
-	  	// 	return false;
-	  	// }
 	  	bootbox.confirm({
 		    title: "Delete Confirmation",
 		    message: "Do you wish to delete this record?",

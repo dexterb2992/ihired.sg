@@ -1277,20 +1277,9 @@ a.btn {
 
 .user-container-head span {
     margin-right: 15px;
-}	
-	
+}
 
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+/* select2 selection */
+.select2-container--bootstrap .select2-results__option[aria-selected=true] {
+    background-color: #FF9800 !important;
+}

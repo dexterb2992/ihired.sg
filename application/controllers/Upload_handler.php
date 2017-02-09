@@ -1,7 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 require_once APPPATH.'libraries/Uploader.php';
+require "Base_Controller.php";
 
-class Upload_handler extends CI_Controller {
+class Upload_handler extends Base_Controller {
 
 	public function __construct()	{
 

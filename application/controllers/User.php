@@ -1,13 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+require "Base_Controller.php";
 
-class User extends CI_Controller{
+class User extends Base_Controller{
 
 	public function __construct(){
 		parent::__construct();
-
-		if( $this->session->userdata('user_id') == null ){
-			redirect( base_url('dashboard/index') );
-		}
 
 		$this->class = $this->router->class;
 		$this->load->model('User_model', 'user', true);

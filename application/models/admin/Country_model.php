@@ -1,25 +1,39 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Country_model extends CI_Model{
+	public function __construct(){
+		parent::__construct();
+		$this->table = "country_master";
+		$this->table_id = "country_id";
+	}
 
 	public function get_list($start=false, $limit=false) {
 
 		// $this->db->where('limit');
-		$this->db->select('country_master.*, t2.full_name, t2.short_name');
-	    $this->db->join('user_master as t2', 'country_master.user_id = t2.user_id', 'LEFT');
-	    $this->db->order_by('country_id', 'DESC');
-		$query = $this->db->get('country_master');
+		$this->db->select($this->table.'.*, t2.full_name, t2.short_name');
+	    $this->db->join('user_master as t2', $this->table.'.user_id = t2.user_id', 'LEFT');
+	    $this->db->order_by($this->table_id, 'DESC');
+		$query = $this->db->get($this->table);
 		if ($query && $query->num_rows())	{
 			$result = $query->result_array();
 			return $result;
 		}
 		return false;
 	}
+
+	public function get($columns = "*", $format = 'object'){
+		$this->db->select($columns);
+		$res = $this->db->get($this->table);
+
+		if( $res->num_rows() > 0 )
+			return $format == 'array' ? $res->result_array() : $res->result();
+		return array();
+	}
 	
     function get_country()
     {
         $this->db->select('*');
-        $query = $this->db->get('country_master');
+        $query = $this->db->get($this->table);
     		if ($query && $query->num_rows())	{
     			$result = $query->result_array();
     			return $result;
@@ -29,9 +43,9 @@ class Country_model extends CI_Model{
 
     public function get_country_list($txtVal) {
 
-      $this->db->select('country_id, country_name');
+      $this->db->select($this->table_id.', country_name');
   		$this->db->like('country_name', $txtVal);
-  		$query = $this->db->get('country_master');
+  		$query = $this->db->get($this->table);
 
   		if ($query && $query->num_rows())	{
   			$result = $query->result_array();
@@ -59,7 +73,7 @@ class Country_model extends CI_Model{
     public function add_country($data) {
 
   		$this->db->set($data);
-  		$this->db->insert('country_master');
+  		$this->db->insert($this->table);
 
   		if($this->db->affected_rows()) {
         return $this->db->insert_id();
@@ -71,11 +85,11 @@ class Country_model extends CI_Model{
     //fetches the list of records for the the autocomplete 
     public function get_select_list_data($txtVal) {
 
-      $this->db->select('country_id, country_name');
+      $this->db->select($this->table_id.', country_name');
       $this->db->like('country_name', $txtVal);
       //$this->db->like('currency_symbol', $txtVal);
       //$this->db->limit(10);
-      $query = $this->db->get('country_master');
+      $query = $this->db->get($this->table);
 
       if ($query && $query->num_rows()) {
         $result = $query->result_array();
@@ -86,9 +100,9 @@ class Country_model extends CI_Model{
 
 	public function get_nationalities() {
 
-		$this->db->select('country_id, nationality', false, false);
+		$this->db->select($this->table_id.', nationality', false, false);
 		$this->db->order_by('nationality', 'ASC');
-		$query = $this->db->get('country_master');
+		$query = $this->db->get($this->table);
 
 		if ($query && $query->num_rows())	{
 			$result = $query->result_array();
@@ -99,10 +113,10 @@ class Country_model extends CI_Model{
 	
 	public function all_nationalities($txtVal) {
 
-		$this->db->select('country_id, nationality');
+		$this->db->select($this->table_id.', nationality');
 		$this->db->like('nationality', $txtVal);     
 		$this->db->limit(10);
-		$query = $this->db->get('country_master');
+		$query = $this->db->get($this->table);
 		if ($query && $query->num_rows())	{
 			$result = $query->result_array();
 			return $result;
@@ -114,7 +128,7 @@ class Country_model extends CI_Model{
 
 		// $this->db->where('limit');
 		$this->db->select('city_master.*, t2.country_name, t3.full_name, t3.short_name');
-    $this->db->join('country_master as t2', 'city_master.country_id = t2.country_id', 'LEFT');
+    $this->db->join("$this->table as t2', 'city_master.$this->table_id = t2.$this->table_id", 'LEFT');
     $this->db->join('user_master as t3', 'city_master.user_id = t3.user_id', 'LEFT');
     $this->db->order_by('city_id', 'DESC');
 		$query = $this->db->get('city_master');
@@ -129,7 +143,7 @@ class Country_model extends CI_Model{
 
 		// $this->db->where('limit');
 		$this->db->select('town_master.*, t2.country_name, t3.full_name, t3.short_name, t4.city_name');
-    $this->db->join('country_master as t2', 'town_master.country_id = t2.country_id', 'LEFT');
+    $this->db->join("$this->table as t2', 'town_master.$this->table_id = t2.$this->table_id", 'LEFT');
     $this->db->join('user_master as t3', 'town_master.user_id = t3.user_id', 'LEFT');
     $this->db->join('city_master as t4', 'town_master.city_id = t4.city_id', 'LEFT');
     $this->db->order_by('town_id', 'DESC');
@@ -142,12 +156,12 @@ class Country_model extends CI_Model{
 	}
 	
 	public function delete_country($coId) {
-		$query = $this->db->get_where('city_master', array('country_id' => $coId));		
+		$query = $this->db->get_where('city_master', array($this->table_id => $coId));		
 		if ($query && $query->num_rows())	{
 			return false;
 		}
 		else{
-			$this->db->delete('country_master', array('country_id' => $coId)); 
+			$this->db->delete($this->table, array($this->table_id => $coId)); 
 			return true;
 		}
 		
@@ -186,7 +200,7 @@ class Country_model extends CI_Model{
 	}
 	
 	public function all_countries() {
-		$query = $this->db->get('country_master');
+		$query = $this->db->get($this->table);
 		if ($query && $query->num_rows()) {
 		  
 		  $result = $query->result_array();

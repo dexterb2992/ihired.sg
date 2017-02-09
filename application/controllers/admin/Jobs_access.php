@@ -1,6 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+require APPPATH."controllers/Base_Controller.php";
 
-class Jobs_access extends CI_Controller {
+class Jobs_access extends Base_Controller {
 	
 	public function __construct(){
 		parent::__construct();

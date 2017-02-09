@@ -1,6 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+require APPPATH."controllers/Base_Controller.php";
 
-class Position extends CI_Controller {
+class Position extends Base_Controller {
 
 	public function __construct()	{
 
