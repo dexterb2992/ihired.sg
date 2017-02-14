@@ -136,6 +136,7 @@
             onComplete: function(filename, response) {
                 console.log(response);
                 if (response.success) {
+                    flashdata_status("Company logo has been updated.", "Saved.");
                     picBox.attr("src", response.newFile + "?foo=" + new Date().getTime());
                 }
                 

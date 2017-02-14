@@ -52,14 +52,16 @@ function flashdata_status(data, type) {
 function Select2PagingPlugin() {
     var _dataSource = null;
     var _pageSize = 20;
-    var $target = null;
+    var $target = null,
+        _callback = null;
     
-    this.init = function(target, dataSource, pageSize) {
+    this.init = function(target, dataSource, pageSize, callback) {
         _dataSource = dataSource;
         $target = target;
-    if (pageSize)
-        _pageSize = pageSize;
+        if(pageSize) _pageSize = pageSize;
+        if(callback) _callback = callback;
     }
+
     
     /* @since select2 v4.0 */
     $.fn.select2.amd.require(["select2/data/array", "select2/utils"],
@@ -80,6 +82,7 @@ function Select2PagingPlugin() {
                 }
                 else {
                     results = _.filter(_dataSource, function(item) { 
+
                         return (item.text.toLowerCase().indexOf(params.term.toLowerCase()) >= 0);
                     }); 
                 }
@@ -101,6 +104,10 @@ function Select2PagingPlugin() {
                     text: $target.attr("data-text")
                 }
             });
+
+            if( _callback ){
+                _callback();
+            }
             
         }
     );

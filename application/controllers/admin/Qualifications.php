@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 require APPPATH."controllers/Base_Controller.php";
 
 class Qualifications extends Base_Controller {

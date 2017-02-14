@@ -1,5 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Qualifications_model extends CI_Model {
+	
+	public function __construct(){
+		$this->table = "qualifications_master";
+		$this->table_id = "qualifications_id";
+	}
 
 	public function get_data() {
 
@@ -45,5 +50,14 @@ class Qualifications_model extends CI_Model {
 			return TRUE;
 		}
 		return FALSE;
+	}
+
+	public function get($columns = "*", $format = 'object'){
+		$this->db->select($columns);
+		$res = $this->db->get($this->table);
+
+		if( $res->num_rows() > 0 )
+			return $format == 'array' ? $res->result_array() : $res->result();
+		return array();
 	}
 }

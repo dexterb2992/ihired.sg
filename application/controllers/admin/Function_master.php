@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 require APPPATH."controllers/Base_Controller.php";
 
 class Function_master extends Base_Controller {

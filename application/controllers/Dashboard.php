@@ -27,6 +27,10 @@ class Dashboard extends Base_Controller{
 			array(
 				"uri" => "admin/jobs_access",
 				"label" => "Job Access"
+			),
+			array(
+				"uri" => "admin/skills_master",
+				"label" => "Skills Master"
 			)
 		);
 

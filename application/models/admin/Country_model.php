@@ -128,9 +128,9 @@ class Country_model extends CI_Model{
 
 		// $this->db->where('limit');
 		$this->db->select('city_master.*, t2.country_name, t3.full_name, t3.short_name');
-    $this->db->join("$this->table as t2', 'city_master.$this->table_id = t2.$this->table_id", 'LEFT');
-    $this->db->join('user_master as t3', 'city_master.user_id = t3.user_id', 'LEFT');
-    $this->db->order_by('city_id', 'DESC');
+	    $this->db->join("$this->table as t2", "city_master.$this->table_id = t2.$this->table_id", 'LEFT');
+	    $this->db->join("user_master as t3", "city_master.user_id = t3.user_id", 'LEFT');
+	    $this->db->order_by('city_id', 'DESC');
 		$query = $this->db->get('city_master');
 		if ($query && $query->num_rows())	{
 			$result = $query->result_array();
@@ -143,10 +143,10 @@ class Country_model extends CI_Model{
 
 		// $this->db->where('limit');
 		$this->db->select('town_master.*, t2.country_name, t3.full_name, t3.short_name, t4.city_name');
-    $this->db->join("$this->table as t2', 'town_master.$this->table_id = t2.$this->table_id", 'LEFT');
-    $this->db->join('user_master as t3', 'town_master.user_id = t3.user_id', 'LEFT');
-    $this->db->join('city_master as t4', 'town_master.city_id = t4.city_id', 'LEFT');
-    $this->db->order_by('town_id', 'DESC');
+	    $this->db->join("$this->table as t2", "town_master.$this->table_id = t2.$this->table_id", 'LEFT');
+	    $this->db->join('user_master as t3', 'town_master.user_id = t3.user_id', 'LEFT');
+	    $this->db->join('city_master as t4', 'town_master.city_id = t4.city_id', 'LEFT');
+	    $this->db->order_by('town_id', 'DESC');
 		$query = $this->db->get('town_master');
 		if ($query && $query->num_rows())	{
 			$result = $query->result_array();
