@@ -29,7 +29,7 @@ class Skills_master extends Base_Controller {
 		$data['qualifications'] = $this->qualifications->get("qualifications_id as id, qualifications_name as text");
 		$data['skills_qualifications'] = $this->sq->all();
 
-		$data['skills_license'] = $this->sl->all();
+		$data['skills_licenses'] = $this->sl->all();
 		$data['licenses'] = $this->license->get("license_id as id, License_name as text");
 
 		foreach ($skills as $skill) {
@@ -100,8 +100,8 @@ class Skills_master extends Base_Controller {
 		return true;
 	}
 
-	public function _unique_skill_qualification($skills_id, $qualifications_id){
-		$res = $this->sl->check($skills_id, $qualifications_id);
+	public function _unique_skill_license($skills_id, $license_id){
+		$res = $this->sl->check($skills_id, $license_id);
 		if($res)
 			return false;
 		return true;
@@ -203,7 +203,7 @@ class Skills_master extends Base_Controller {
 			$response['msg'] = validation_errors();
 			$response['success'] = false;
 		}else{
-			if( $this->_unique_skill_qualification($data['skills_id'], $data['license_id']) == false ){
+			if( $this->_unique_skill_license($data['skills_id'], $data['license_id']) == false ){
 				$response["msg"] = "This license already exists.";
 				$response["success"] = false;
 			}else{

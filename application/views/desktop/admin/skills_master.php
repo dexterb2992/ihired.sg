@@ -16,6 +16,11 @@
                     <h2 class="country-nav-tabs">Qualifications for  Skills</h2>
                 </a>
             </li>
+            <li>
+                <a href="#l_skills" data-toggle="tab">
+                    <h2 class="country-nav-tabs">License for  Skills</h2>
+                </a>
+            </li>
         </ul>
 
         <script>
@@ -23,6 +28,8 @@
             var skills = <?= json_encode($_skills); ?>;
             var qualifications = <?= json_encode($qualifications); ?>;
             var skills_qualifications = <?= json_encode($skills_qualifications); ?>;
+            var licenses = <?= json_encode($licenses); ?>;
+            var skills_licenses = <?= json_encode($skills_licenses); ?>;
         </script>
 
         <div class="tab-content">
@@ -138,7 +145,7 @@
                     <tr>
                         <form id="frm_add_skills_licenses" method="post">
                             <td>
-                                <select name="skills_id" class="form-control" data-text="------ Select Skills ------" data-allow-clear="true"></select>
+                                <select id="sb_license_skills" name="skills_id" class="form-control" data-text="------ Select Skills ------" data-allow-clear="true"></select>
                             </td>
                             <td>
                                 <select id="sb_licenses" name="license_id" class="form-control" data-text="------ Select License ------" data-allow-clear="true"></select>

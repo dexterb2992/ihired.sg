@@ -66,10 +66,12 @@
                     console.log(text);
                 });
             }else if (target == "#l_skills"){
-                var i_license_skills = new Select2PagingPlugin();
+                var i_license_skills = new Select2PagingPlugin(),
+                    i_licenses = new Select2PagingPlugin();
                 i_license_skills.init(sb_license_skills, skills);
-
-                sb_skills.bind("change focus", function (){
+                i_licenses.init(sb_licenses, licenses);
+                
+                sb_license_skills.bind("change focus", function (){
                     var data = $("#sb_license_skills").select2('data');
                     var text = data.length > 0 ? data[0].text : "";
                     dtTable_skills_licenses
@@ -114,10 +116,6 @@
                     if( data.success == true ){
                         skills.push(data.details.skill);
 
-                        tbl_skills.DataTable({
-                            destroy: true
-                        });
-
                         var btn_delete = btn_delete_skill.clone();
 
                         btn_delete.attr("data-id", data.details.skill.skills_id);
@@ -127,15 +125,13 @@
 
                         var div = $(document.createElement('div')).append(btn_delete);
                         var specialised = is_specialised.is(":checked") ? "Yes" : "No";
-                        var new_row = $(document.createElement('tr'));
-                        var tds = '<td>'+txt_skills_name.val()+'</td>'+
-                                  '<td>'+sb_functions.select2('data')[0].text+'</td>'+
-                                  '<td>'+specialised+'</td>'+
-                                  '<td>'+div.html()+'</td>';
-                        new_row.append( $(tds) );
 
-                        tbl_skills.children('tbody').prepend(new_row);
-                        tbl_skills.dataTable();
+                        dtTable_skills.row.add([
+                            txt_skills_name.val(),
+                            sb_functions.select2('data')[0].text,
+                            specialised,
+                            div.html()
+                        ]).draw( false );
 
                         flashdata_status(data.msg, 'Saved.');
                     }else{
@@ -170,9 +166,8 @@
                     if( data.success == true ){
                         skills_qualifications.push(data.details.skills_qualifications);
 
-                        tbl_skills_qualifications.DataTable({
-                            destroy: true
-                        });
+                        var skill_name = sb_skills.select2('data')[0].text;
+                        var qualification_name = sb_qualifications.select2('data')[0].text;
 
                         var btn_delete = btn_delete_skills_qualifications.clone();
 
@@ -182,14 +177,12 @@
                         // Run some tests here http://jsperf.com/jquery-vs-createelement
 
                         var div = $(document.createElement('div')).append(btn_delete);
-                        var new_row = $(document.createElement('tr'));
-                        var tds = '<td>'+sb_skills.select2('data')[0].text+'</td>'+
-                                  '<td>'+sb_qualifications.select2('data')[0].text+'</td>'+
-                                  '<td>'+div.html()+'</td>';
-                        new_row.append( $(tds) );
 
-                        tbl_skills_qualifications.children('tbody').prepend(new_row);
-                        tbl_skills_qualifications.dataTable();
+                        dtTable_skills_qualifications.row.add([
+                            skill_name,
+                            qualification_name,
+                            div.html()
+                        ]).draw( false );
 
                         flashdata_status(data.msg, 'Saved.');
                     }else{
@@ -216,7 +209,7 @@
                 dataType: 'json',
                 data: {
                     skills_id: sb_license_skills.val(),
-                    license_id: sb_license.val(),
+                    license_id: sb_licenses.val(),
                 },
                 beforeSend: function (){
                     $this.addClass("disabled").attr("disabled", "disabled").text("Please wait...");
@@ -225,9 +218,8 @@
                     if( data.success == true ){
                         skills_licenses.push(data.details.skills_licenses);
 
-                        tbl_skills_licenses.DataTable({
-                            destroy: true
-                        });
+                        var skill_name = sb_license_skills.select2('data')[0].text;
+                        var license_name = sb_licenses.select2('data')[0].text;
 
                         var btn_delete = btn_delete_skills_licenses.clone();
 
@@ -237,14 +229,12 @@
                         // Run some tests here http://jsperf.com/jquery-vs-createelement
 
                         var div = $(document.createElement('div')).append(btn_delete);
-                        var new_row = $(document.createElement('tr'));
-                        var tds = '<td>'+sb_skills.select2('data')[0].text+'</td>'+
-                                  '<td>'+sb_qualifications.select2('data')[0].text+'</td>'+
-                                  '<td>'+div.html()+'</td>';
-                        new_row.append( $(tds) );
 
-                        tbl_skills_licenses.children('tbody').prepend(new_row);
-                        tbl_skills_licenses.dataTable();
+                        dtTable_skills_licenses.row.add([
+                            skill_name,
+                            license_name,
+                            div.html()
+                        ]).draw( false );
 
                         flashdata_status(data.msg, 'Saved.');
                     }else{
@@ -286,13 +276,12 @@
                             type: 'post',
                             success: function(data) {
                                 if(data.success == true) {
-                                    tbl_skills.dataTable({
-                                        destroy: true
-                                    });
-
-                                    $this.closest('tr').slideUp('slow');
+                                    dtTable_skills.row( $this.parents('tr') )
+                                        .remove()
+                                        .draw(false);
+                                   
                                     flashdata_status(data.msg, 'Saved.');
-                                    tbl_skills.dataTable();
+
                                 } else {
                                     flashdata_status(data.msg);
                                 }
@@ -330,13 +319,13 @@
                             type: 'post',
                             success: function(data) {
                                 if(data.success == true) {
-                                    tbl_skills_qualifications.dataTable({
-                                        destroy: true
-                                    });
 
-                                    $this.closest('tr').slideUp('slow');
+                                    dtTable_skills_qualifications
+                                        .row( $this.parents('tr') )
+                                        .remove()
+                                        .draw(false);
+
                                     flashdata_status(data.msg, 'Saved.');
-                                    tbl_skills_qualifications.dataTable();
                                 } else {
                                     flashdata_status(data.msg);
                                 }
@@ -374,13 +363,12 @@
                             type: 'post',
                             success: function(data) {
                                 if(data.success == true) {
-                                    tbl_skills_licenses.dataTable({
-                                        destroy: true
-                                    });
+                                    dtTable_skills_licenses
+                                        .row( $this.closest('tr') )
+                                        .remove()
+                                        .draw(false);
 
-                                    $this.closest('tr').slideUp('slow');
                                     flashdata_status(data.msg, 'Saved.');
-                                    tbl_skills_licenses.dataTable();
                                 } else {
                                     flashdata_status(data.msg);
                                 }
