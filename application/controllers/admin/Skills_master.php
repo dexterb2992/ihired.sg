@@ -12,27 +12,27 @@ class Skills_master extends Base_Controller {
 
 		$this->load->model('admin/Skills_model', 'skills', true);
 		$this->load->model("admin/SkillsQualifications_model", "sq", true);
+		$this->load->model("admin/SkillsLicenses_model", "sl", true);
 	}
 
 	public function index(){
 		$this->load->model("admin/Function_model", "function", true);
 		$this->load->model("admin/Qualifications_model", "qualifications", true);
+		$this->load->model("admin/License_model", "license", true);
 
 		$data = array();
 		$skills = $this->skills->all();
 		$data['js_module'] = $this->class;
 		$data['functions'] = $this->function->get("function_id as id, function_name as text");
 		$data["_skills"] = array();
+		$data['skills'] = $skills;
 		$data['qualifications'] = $this->qualifications->get("qualifications_id as id, qualifications_name as text");
 		$data['skills_qualifications'] = $this->sq->all();
-		$data['skills'] = $skills;
+
+		$data['skills_license'] = $this->sl->all();
+		$data['licenses'] = $this->license->get("license_id as id, License_name as text");
 
 		foreach ($skills as $skill) {
-			// $data["_skills"][] = array(
-			// 	"label" => $skill->skills_name,
-			// 	"value" => $skill->skills_id
-			// );
-
 			$data['_skills'][] = array(
 				"text" => $skill->skills_name,
 				"id" => $skill->skills_id
@@ -95,10 +95,15 @@ class Skills_master extends Base_Controller {
 
 	public function _unique_skill_qualification($skills_id, $qualifications_id){
 		$res = $this->sq->check($skills_id, $qualifications_id);
-		if($res) {
-			$this->form_validation->set_message("skills_id", "This qualification already exists." );
+		if($res)
 			return false;
-		}
+		return true;
+	}
+
+	public function _unique_skill_qualification($skills_id, $qualifications_id){
+		$res = $this->sl->check($skills_id, $qualifications_id);
+		if($res)
+			return false;
 		return true;
 	}
 
@@ -131,26 +136,30 @@ class Skills_master extends Base_Controller {
 
 		
 
-		if($this->form_validation->run() != true || $this->_unique_skill_qualification($data['skills_id'], $data['qualifications_id']) == false){
+		if($this->form_validation->run() != true){
 			$response['msg'] = validation_errors();
 			$response['success'] = false;
 		}else{
-			$sq = array(
-				'skills_id' => $data['skills_id'],
-				'qualifications_id' => $data['qualifications_id']
-			);
-
-
-			$result = $this->sq->create($sq);
-
-			if( $result == false ){
-				$response['success'] = false;
-				$response['msg'] = 'Unable to process your request right now. Please try again later.';
+			if( $this->_unique_skill_qualification($data['skills_id'], $data['qualifications_id']) == false ){
+				$response["msg"] = "This qualification already exists.";
+				$response["success"] = false;
 			}else{
-				$sq['skills_qualifications_id'] = $result;
-				$response['details'] = array(
-					"skills_qualifications" => $sq
+				$sq = array(
+					'skills_id' => $data['skills_id'],
+					'qualifications_id' => $data['qualifications_id']
 				);
+
+				$result = $this->sq->create($sq);
+
+				if( $result == false ){
+					$response['success'] = false;
+					$response['msg'] = 'Unable to process your request right now. Please try again later.';
+				}else{
+					$sq['sq_id'] = $result;
+					$response['details'] = array(
+						"skills_qualifications" => $sq
+					);
+				}
 			}
 		}
 
@@ -170,6 +179,69 @@ class Skills_master extends Base_Controller {
 		}else{
 			$id = $this->input->post('id');
 			if( $this->sq->delete($id) ){
+				$response['msg'] = 'Successfully deleted.';
+				$response['success'] = true;
+			}		
+		}
+		echo json_encode($response);
+	}
+
+	public function add_skill_license(){
+		$this->form_validation->set_rules('skills_id', 'Skills', 'xss_clean|required|trim');
+		$this->form_validation->set_rules('license_id', 'License', 'xss_clean|required|trim');
+
+		$response = array(
+			'success' => true, 
+			'msg' => "New license has been added." 
+		);
+
+		$data = $this->input->post();
+
+		
+
+		if($this->form_validation->run() != true){
+			$response['msg'] = validation_errors();
+			$response['success'] = false;
+		}else{
+			if( $this->_unique_skill_qualification($data['skills_id'], $data['license_id']) == false ){
+				$response["msg"] = "This license already exists.";
+				$response["success"] = false;
+			}else{
+				$sl = array(
+					'skills_id' => $data['skills_id'],
+					'license_id' => $data['license_id']
+				);
+
+				$result = $this->sl->create($sl);
+
+				if( $result == false ){
+					$response['success'] = false;
+					$response['msg'] = 'Unable to process your request right now. Please try again later.';
+				}else{
+					$sl['sl_id'] = $result;
+					$response['details'] = array(
+						"skills_licenses" => $sl
+					);
+				}
+			}
+		}
+
+		echo json_encode($response);
+	}
+
+	public function remove_skill_license(){
+		$response = array(
+			'success' => false, 
+			'msg' => "Sorry, but we can't process your request right now. Please try again later." 
+		);
+
+		$this->form_validation->set_rules('id', 'Skills License ID', 'xss_clean|required|trim');
+		if($this->form_validation->run() != true){
+			$response['msg'] = validation_errors();
+			$response['success'] = false;
+		}else{
+			$id = $this->input->post('id');
+			if( $this->sl->delete($id) ){
 				$response['msg'] = 'Successfully deleted.';
 				$response['success'] = true;
 			}		

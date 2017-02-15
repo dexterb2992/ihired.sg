@@ -26,7 +26,7 @@
         </script>
 
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="m_skill">
+            <div role="tabpanel" class="tab-pane active" id="m_skill"><!-- start Manage Skills -->
                 <table class="table borderless">
                     <tr>
                         <form id="frm_add_skill" method="post">
@@ -61,7 +61,7 @@
                     <?php
     				foreach ($skills as $key => $skill) :
     				?>
-    					<tr data-id="<?= $skill->skills_id; ?>">
+    					<tr>
                             <td class="vert-align">
                                 <?= ucwords($skill->skills_name); ?>
                             </td>
@@ -82,9 +82,9 @@
     				?>
                     </tbody>
                 </table>
-            </div><!-- tab-pane -->
+            </div><!-- end Manage Skills -->
 
-            <div role="tabpanel" class="tab-pane" id="q_skills">
+            <div role="tabpanel" class="tab-pane" id="q_skills"><!-- start Qualification for Skills -->
                 <table class="table borderless">
                     <tr>
                         <form id="frm_add_skills_qualifications" method="post">
@@ -113,7 +113,7 @@
                     <?php
                     foreach ($skills_qualifications as $key => $sq) :
                     ?>
-                        <tr data-id="<?= $sq->sq_id; ?>">
+                        <tr>
                             <td class="vert-align">
                                 <?= ucwords($sq->skills_name); ?>
                             </td>
@@ -131,9 +131,57 @@
                     ?>
                     </tbody>
                 </table>
-            </div>
+            </div><!-- end Qualification for Skills -->
+            
+            <div class="tab-pane" role="tabpanel" id="l_skills"><!-- start License for Skills -->
+                <table class="table borderless">
+                    <tr>
+                        <form id="frm_add_skills_licenses" method="post">
+                            <td>
+                                <select name="skills_id" class="form-control" data-text="------ Select Skills ------" data-allow-clear="true"></select>
+                            </td>
+                            <td>
+                                <select id="sb_licenses" name="license_id" class="form-control" data-text="------ Select License ------" data-allow-clear="true"></select>
+                            </td>
+                            <td>
+                                <input type="button" id="btn_add_skills_licenses" class="btn btn-sm user-btn btn-noradius" value="Update">
+                            </td>
+                        </form>
+                    </tr>
+                </table>
+
+                <table class="table table-striped margin-top display datatable" id="tbl_skills_licenses">
+                    <thead class="red-table-header">
+                        <tr>
+                            <th>Skills Name</th>
+                            <th>License/Board Name</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach ($skills_licenses as $key => $license) :
+                    ?>
+                        <tr>
+                            <td class="vert-align">
+                                <?= ucwords($license->skills_name); ?>
+                            </td>
+                            <td class="vert-align">
+                                <?= $license->License_name; ?>
+                            </td>
+                            <td class="vert-align">
+                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skills-licenses" data-id="<?= $license->sl_id; ?>" title="Delete">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    <?php
+                    endforeach;
+                    ?>
+                    </tbody>
+                </table>
+            </div><!-- end License for Skills -->
         </div>
-        <!-- END Company -->
     </div>
 </div>
 

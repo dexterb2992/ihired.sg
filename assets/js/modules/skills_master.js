@@ -5,31 +5,54 @@
 
 	$(function (){
 		// $ is now locally scoped
+
+        /* tables */
+        var tbl_skills = $("#tbl_skills"),
+            tbl_skills_qualifications = $("#tbl_skills_qualifications"),
+            tbl_skills_licenses = $("#tbl_skills_licenses");
+
+        /* form text inputs */
 		var txt_skills_name = $("#txt_skills_name"),
 			skills_name = $("#skills_name"),
-            sb_functions = $("#function_id"),
+			is_specialised = $("#is_specialised");
+
+        /* form select boxes */
+        var sb_functions = $("#function_id"),
             sb_skills = $("#sb_skills"),
-			sb_qualifications = $("#sb_qualifications"),
-			tbl_skills = $("#tbl_skills"),
-            tbl_skills_qualifications = $("#tbl_skills_qualifications"),
-			is_specialised = $("#is_specialised"),
-            btn_delete_skill = $(".btn-delete-skill").first(),
+            sb_qualifications = $("#sb_qualifications"),
+            sb_licenses = $("#sb_licenses"),
+            sb_license_skills = $("#sb_license_skills");
+
+        /* form buttons */
+        var btn_delete_skill = $(".btn-delete-skill").first(),
             btn_delete_skills_qualifications = $(".btn-delete-skills-qualifications").first(),
             btn_add_skill = $("#btn_add_skill"),
-            btn_add_skills_qualifications = $("#btn_add_skills_qualifications");
+            btn_add_skills_qualifications = $("#btn_add_skills_qualifications"),
+            btn_add_skills_licenses = $("#btn_add_skills_licenses"),
+            btn_delete_skills_licenses = $(".btn-delete-skill").first();
 
         /** = = = = = = dropdown boxes = = = = = = =  */
         var i_functions = new Select2PagingPlugin();          
         i_functions.init(sb_functions, functions);
 
+        /** = = = = = = dataTables = = = = = = = = = = = = */
+        var dtTable_skills = $("#tbl_skills").DataTable({
+            	"iDisplayLength": 100,
+            }),
+            dtTable_skills_qualifications = $("#tbl_skills_qualifications").DataTable({
+                "iDisplayLength": 100,
+            }),
+            dtTable_skills_licenses = $("#tbl_skills_licenses").DataTable({
+                "iDisplayLength": 100,
+            });
+
 
         /* hack: activate select2 on tabchange event to fix issue on select2 inside tabs */
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             var target = $(e.target).attr("href") // activated tab
-            console.log(target);
             if( target == "#q_skills" ){
-                i_skills = new Select2PagingPlugin(),
-                i_qualifications = new Select2PagingPlugin();
+                var i_skills = new Select2PagingPlugin(),
+                    i_qualifications = new Select2PagingPlugin();
 
                 i_qualifications.init(sb_qualifications, qualifications);
                 i_skills.init(sb_skills, skills);
@@ -42,16 +65,20 @@
                         .draw();
                     console.log(text);
                 });
+            }else if (target == "#l_skills"){
+                var i_license_skills = new Select2PagingPlugin();
+                i_license_skills.init(sb_license_skills, skills);
+
+                sb_skills.bind("change focus", function (){
+                    var data = $("#sb_license_skills").select2('data');
+                    var text = data.length > 0 ? data[0].text : "";
+                    dtTable_skills_licenses
+                        .column(0)
+                        .search(text)
+                        .draw();
+                });
             }
         });
-
-        /** = = = = = = dataTables = = = = = = = = = = = = */
-        var dtTable_skills = $("#tbl_skills").DataTable({
-            	"iDisplayLength": 100,
-            }),
-            dtTable_skills_qualifications = $("#tbl_skills_qualifications").DataTable({
-                "iDisplayLength": 100,
-            });
 
 
         /* = = = = = = dataTables' search field = = = = = */
@@ -149,7 +176,7 @@
 
                         var btn_delete = btn_delete_skills_qualifications.clone();
 
-                        btn_delete.attr("data-id", data.details.skills_qualifications.skills_qualifications_id);
+                        btn_delete.attr("data-id", data.details.skills_qualifications.sq_id);
 
                         // I used document.createElement because it's the fastest way to create a dom element
                         // Run some tests here http://jsperf.com/jquery-vs-createelement
@@ -179,6 +206,62 @@
             });
         });
 
+
+        btn_add_skills_licenses.on("click", function (){
+            var $this = $(this);
+
+            $.ajax({
+                url: base_url+"admin/skills_master/add_skill_license",
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    skills_id: sb_license_skills.val(),
+                    license_id: sb_license.val(),
+                },
+                beforeSend: function (){
+                    $this.addClass("disabled").attr("disabled", "disabled").text("Please wait...");
+                },
+                success: function (data){
+                    if( data.success == true ){
+                        skills_licenses.push(data.details.skills_licenses);
+
+                        tbl_skills_licenses.DataTable({
+                            destroy: true
+                        });
+
+                        var btn_delete = btn_delete_skills_licenses.clone();
+
+                        btn_delete.attr("data-id", data.details.skills_licenses.sl_id);
+
+                        // I used document.createElement because it's the fastest way to create a dom element
+                        // Run some tests here http://jsperf.com/jquery-vs-createelement
+
+                        var div = $(document.createElement('div')).append(btn_delete);
+                        var new_row = $(document.createElement('tr'));
+                        var tds = '<td>'+sb_skills.select2('data')[0].text+'</td>'+
+                                  '<td>'+sb_qualifications.select2('data')[0].text+'</td>'+
+                                  '<td>'+div.html()+'</td>';
+                        new_row.append( $(tds) );
+
+                        tbl_skills_licenses.children('tbody').prepend(new_row);
+                        tbl_skills_licenses.dataTable();
+
+                        flashdata_status(data.msg, 'Saved.');
+                    }else{
+                        flashdata_status(data.msg);
+                    }
+
+                    $this.removeClass("disabled").removeAttr("disabled").text("Update");
+                },
+                error: function (data){
+                    console.error(data);
+                    flashdata_status("Whoops! Something went wrong. Please try again later.");
+                    $this.removeClass("disabled").removeAttr("disabled").text("Update");
+                }
+            });
+        });
+
+        /* = = = = = = = delete buttons = = = = = = = = = */
         $(document).on("click", ".btn-delete-skill", function (){
         	var $this = $(this),
                 id = $this.attr('data-id');
@@ -254,6 +337,50 @@
                                     $this.closest('tr').slideUp('slow');
                                     flashdata_status(data.msg, 'Saved.');
                                     tbl_skills_qualifications.dataTable();
+                                } else {
+                                    flashdata_status(data.msg);
+                                }
+                            },
+                            error: function (data){
+                                console.warn(data);
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        $(document).on("click", ".btn-delete-skills-licenses", function (){
+            var $this = $(this),
+                id = $this.attr('data-id');
+
+            bootbox.confirm({
+                title: "Delete Confirmation",
+                message: "Do you wish to delete this record?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="glyphicon glyphicon-remove"></i> No'
+                    },
+                    confirm: {
+                        label: '<i class="glyphicon glyphicon-ok"></i> Yes'
+                    }
+                },
+                callback: function (ans) {
+                    if(ans) {
+                        $.ajax({
+                            url : base_url + 'admin/skills_master/remove_skill_license',
+                            data: { id: id },
+                            dataType: 'json',
+                            type: 'post',
+                            success: function(data) {
+                                if(data.success == true) {
+                                    tbl_skills_licenses.dataTable({
+                                        destroy: true
+                                    });
+
+                                    $this.closest('tr').slideUp('slow');
+                                    flashdata_status(data.msg, 'Saved.');
+                                    tbl_skills_licenses.dataTable();
                                 } else {
                                     flashdata_status(data.msg);
                                 }
