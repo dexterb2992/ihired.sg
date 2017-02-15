@@ -26,10 +26,10 @@
         /* form buttons */
         var btn_delete_skill = $(".btn-delete-skill").first(),
             btn_delete_skills_qualifications = $(".btn-delete-skills-qualifications").first(),
+            btn_delete_skills_licenses = $(".btn-delete-skills-licenses").first(),
             btn_add_skill = $("#btn_add_skill"),
             btn_add_skills_qualifications = $("#btn_add_skills_qualifications"),
-            btn_add_skills_licenses = $("#btn_add_skills_licenses"),
-            btn_delete_skills_licenses = $(".btn-delete-skill").first();
+            btn_add_skills_licenses = $("#btn_add_skills_licenses");
 
         /** = = = = = = dropdown boxes = = = = = = =  */
         var i_functions = new Select2PagingPlugin();          
@@ -70,7 +70,7 @@
                     i_licenses = new Select2PagingPlugin();
                 i_license_skills.init(sb_license_skills, skills);
                 i_licenses.init(sb_licenses, licenses);
-                
+
                 sb_license_skills.bind("change focus", function (){
                     var data = $("#sb_license_skills").select2('data');
                     var text = data.length > 0 ? data[0].text : "";
@@ -364,7 +364,7 @@
                             success: function(data) {
                                 if(data.success == true) {
                                     dtTable_skills_licenses
-                                        .row( $this.closest('tr') )
+                                        .row( $this.parents('tr') )
                                         .remove()
                                         .draw(false);
 
