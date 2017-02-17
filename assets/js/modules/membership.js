@@ -10,19 +10,19 @@
         var tbl_skills = $("#tbl_skills");
 
         /* form text inputs */
-		var license_name = $("#license_name"),
-			txt_license_name = $("#txt_license_name");
+		var membership_name = $("#membership_name"),
+			txt_membership_name = $("#txt_membership_name");
 
         /* text inputs autocomplete */
-        initAutoComplete(txt_license_name, $("#txt_license_name"), licenses, license_name);
-
+        initAutoComplete(txt_membership_name, $("#txt_membership_name"), memberships, membership_name);
+        
         /* form select boxes */
         var sb_country = $("#sb_country"),
             sb_city = $("#sb_city");
 
         /* form buttons */
-        var btn_delete_license = $(".btn-delete-license").first(),
-            btn_add_license = $("#btn_add_license");
+        var btn_delete_membership = $(".btn-delete-membership").first(),
+            btn_add_membership = $("#btn_add_membership");
 
         /** = = = = = = dropdown boxes = = = = = = =  */
         sb_country.select2({
@@ -31,7 +31,7 @@
             theme: 'bootstrap',
             allowClear: true,
             ajax: {
-                url: base_url+'admin/license/get_countries',
+                url: base_url+'admin/membership/get_countries',
                 dataType: 'json',
                 data: function(params) {
                     return {
@@ -55,7 +55,7 @@
             sb_city.select2('destroy').html("");
 
             $.ajax({
-                url: base_url+'admin/license/get_cities/'+country_id,
+                url: base_url+'admin/membership/get_cities/'+country_id,
                 type: 'get',
                 dataType: 'json',
                 success: function (data){
@@ -66,14 +66,14 @@
         });
 
         /** = = = = = = dataTables = = = = = = = = = = = = */
-        var dtTable_licenses = $("#tbl_licenses").DataTable({
+        var dtTable_memberships = $("#tbl_memberships").DataTable({
             	"iDisplayLength": 100,
             });
 
 
         /* = = = = = = dataTables' search field = = = = = */
-        txt_license_name.bind("change keyup", function(){
-            dtTable_licenses
+        txt_membership_name.bind("change keyup", function(){
+            dtTable_memberships
                 .column(0)
                 .search(this.value)
                 .draw();
@@ -81,15 +81,15 @@
 
 
         /* = = = = = = = update buttons = = = = = = = = = */
-        btn_add_license.on("click", function (){
+        btn_add_membership.on("click", function (){
         	var $this = $(this);
 
         	$.ajax({
-        		url: base_url+"admin/license/create",
+        		url: base_url+"admin/membership/create",
         		type: 'post',
         		dataType: 'json',
         		data: {
-        			license_name: txt_license_name.val(),
+        			membership_name: txt_membership_name.val(),
 					country_id: sb_country.val(),
 					city_id: sb_city.val()
         		},
@@ -98,22 +98,22 @@
         		},
         		success: function (data){
                     if( data.success == true ){
-                        licenses.push({
-                            label: data.details.license.License_name,
-                            value: data.details.license.license_id
+                        memberships.push({
+                            label: data.details.membership.membership_name,
+                            value: data.details.membership.membership_id
                         });
 
-                        var btn_delete = btn_delete_license.clone();
+                        var btn_delete = btn_delete_membership.clone();
 
-                        btn_delete.attr("data-id", data.details.license.license_id);
+                        btn_delete.attr("data-id", data.details.membership.membership_id);
 
                         // I used document.createElement because it's the fastest way to create a dom element
                         // Run some tests here http://jsperf.com/jquery-vs-createelement
 
                         var div = $(document.createElement('div')).append(btn_delete);
 
-                        dtTable_licenses.row.add([
-                            txt_license_name.val(),
+                        dtTable_memberships.row.add([
+                            txt_membership_name.val(),
                             sb_country.select2('data')[0].text,
                             sb_city.select2('data')[0].text,
                             div.html()
@@ -136,7 +136,7 @@
 
 
         /* = = = = = = = delete buttons = = = = = = = = = */
-        $(document).on("click", ".btn-delete-license", function (){
+        $(document).on("click", ".btn-delete-membership", function (){
         	var $this = $(this),
                 id = $this.attr('data-id');
 
@@ -154,21 +154,20 @@
                 callback: function (ans) {
                     if(ans) {
                         $.ajax({
-                            url : base_url + 'admin/license/delete',
+                            url : base_url + 'admin/membership/delete',
                             data: { id: id },
                             dataType: 'json',
                             type: 'post',
                             success: function(data) {
                                 if(data.success == true) {
                                     // remove from source
-                                    licenses = licenses.filter(function(license) {
-                                        return license.value != id;
+                                    memberships = memberships.filter(function(membership) {
+                                        return membership.value != id;
                                     });
-
                                     // refresh autocomplete
-                                    initAutoComplete(txt_license_name, $("#txt_license_name"), licenses, license_name);
+                                    initAutoComplete(txt_membership_name, $("#txt_membership_name"), memberships, membership_name);
 
-                                    dtTable_licenses.row( $this.parents('tr') )
+                                    dtTable_memberships.row( $this.parents('tr') )
                                         .remove()
                                         .draw(false);
                                    
@@ -190,6 +189,5 @@
 	});
 
 	// The rest of the code goes here
-   
-
+    
 }));

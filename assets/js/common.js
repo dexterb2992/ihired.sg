@@ -112,3 +112,25 @@ function Select2PagingPlugin() {
         }
     );
 }
+
+
+function initAutoComplete(autocomplete_field, txt_field, source, hidden_field){
+    autocomplete_field.autocomplete({
+        source: source,
+        minLength:0,
+        select: function (event, ui) {
+            console.log(ui.item);
+            txt_field.val(ui.item.label); // display the selected text
+            hidden_field.val(ui.item.value); // save selected id to hidden input
+            return false;
+        },
+        response: function(event, ui) {
+            // ui.content is the array that's about to be sent to the response callback.
+            if (ui.content.length === 0) {
+                hidden_field.val("");
+            }
+        } 
+    }).on('focus', function() { 
+        $(this).keydown(); 
+    });
+}

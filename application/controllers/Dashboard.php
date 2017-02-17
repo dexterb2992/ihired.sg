@@ -67,6 +67,10 @@ class Dashboard extends Base_Controller{
 						"uri" => "admin/license",
 						"label" => "License Master"
 					),
+					array(
+						"uri" => "admin/membership",
+						"label" => "Membership Master"
+					),
 				)
 			)
 		);
