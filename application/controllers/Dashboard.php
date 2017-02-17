@@ -64,6 +64,10 @@ class Dashboard extends Base_Controller{
 						'label' => 'Function Master',
 					),
 					array(
+						"uri" => "admin/university",
+						"label" => "University Master"
+					),
+					array(
 						"uri" => "admin/license",
 						"label" => "License Master"
 					),
