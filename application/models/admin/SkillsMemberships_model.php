@@ -1,17 +1,18 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class License_model extends CI_Model{
+class SkillsMemberships_model extends CI_Model{
 
 	public function __construct(){
 		parent::__construct();
-		$this->table = "License_master";
-		$this->table_id = "license_id";
+		$this->table = "skills_memberships";
+		$this->table_id = "sm_id";
 	}
 
 	public function all($format = 'object'){
-		$this->db->select($this->table.".*, t2.country_name, t3.city_name");
-		$this->db->join('country_master as t2', "t2.country_id = {$this->table}.country_id", 'INNER');
-		$this->db->join('city_master as t3', "t3.city_id = {$this->table}.city_id", 'INNER');
+
+		$this->db->select("{$this->table}.*, t2.membership_name, t3.skills_name");
+	    $this->db->join("memberships_master as t2", "{$this->table}.membership_id = t2.membership_id", 'INNER');
+	    $this->db->join("skills_master as t3", "{$this->table}.skills_id = t3.skills_id", 'INNER');
 	    $res = $this->db->get($this->table);
 	    
 		switch ($format) {
@@ -94,11 +95,10 @@ class License_model extends CI_Model{
 		return array();
 	}
 
-	public function check($name, $country_id, $city_id){
+	public function check($skills_id, $membership_id){
 		$this->db->select("*");
-		$this->db->where('LOWER(License_name)', strtolower($name));
-		$this->db->where('country_id', $country_id, FALSE);
-		$this->db->where('city_id', $city_id, FALSE);
+		$this->db->where('skills_id', $skills_id);
+		$this->db->where('membership_id', $membership_id);
 		$res = $this->db->get($this->table);
 		if( $res->num_rows() > 0 )
 			return true; // already exists

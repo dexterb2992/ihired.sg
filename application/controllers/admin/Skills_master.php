@@ -13,12 +13,14 @@ class Skills_master extends Base_Controller {
 		$this->load->model('admin/Skills_model', 'skills', true);
 		$this->load->model("admin/SkillsQualifications_model", "sq", true);
 		$this->load->model("admin/SkillsLicenses_model", "sl", true);
+		$this->load->model("admin/SkillsMemberships_model", "sm", true);
 	}
 
 	public function index(){
 		$this->load->model("admin/Function_model", "function", true);
 		$this->load->model("admin/Qualifications_model", "qualifications", true);
 		$this->load->model("admin/License_model", "license", true);
+		$this->load->model("admin/Membership_model", "membership", true);
 
 		$data = array();
 		$skills = $this->skills->all();
@@ -31,6 +33,9 @@ class Skills_master extends Base_Controller {
 
 		$data['skills_licenses'] = $this->sl->all();
 		$data['licenses'] = $this->license->get("license_id as id, License_name as text");
+
+		$data['skills_memberships'] = $this->sm->all();
+		$data['memberships'] = $this->membership->get("membership_id as id, membership_name as text");
 
 		foreach ($skills as $skill) {
 			$data['_skills'][] = array(
@@ -93,20 +98,6 @@ class Skills_master extends Base_Controller {
 		return true;
 	}
 
-	public function _unique_skill_qualification($skills_id, $qualifications_id){
-		$res = $this->sq->check($skills_id, $qualifications_id);
-		if($res)
-			return false;
-		return true;
-	}
-
-	public function _unique_skill_license($skills_id, $license_id){
-		$res = $this->sl->check($skills_id, $license_id);
-		if($res)
-			return false;
-		return true;
-	}
-
 	public function delete(){
 		$id = $this->input->post('id');
 
@@ -140,7 +131,7 @@ class Skills_master extends Base_Controller {
 			$response['msg'] = validation_errors();
 			$response['success'] = false;
 		}else{
-			if( $this->_unique_skill_qualification($data['skills_id'], $data['qualifications_id']) == false ){
+			if( $this->sq->check($data['skills_id'], $data['qualifications_id']) == true ){
 				$response["msg"] = "This qualification already exists.";
 				$response["success"] = false;
 			}else{
@@ -203,7 +194,7 @@ class Skills_master extends Base_Controller {
 			$response['msg'] = validation_errors();
 			$response['success'] = false;
 		}else{
-			if( $this->_unique_skill_license($data['skills_id'], $data['license_id']) == false ){
+			if( $this->sl->check($data['skills_id'], $data['license_id']) == true ){
 				$response["msg"] = "This license already exists.";
 				$response["success"] = false;
 			}else{
@@ -248,4 +239,68 @@ class Skills_master extends Base_Controller {
 		}
 		echo json_encode($response);
 	}
+
+	public function add_skill_membership(){
+		$this->form_validation->set_rules('skills_id', 'Skills', 'xss_clean|required|trim');
+		$this->form_validation->set_rules('membership_id', 'Membership', 'xss_clean|required|trim');
+
+		$response = array(
+			'success' => true, 
+			'msg' => "New membership has been added." 
+		);
+
+		$data = $this->input->post();
+
+		
+
+		if($this->form_validation->run() != true){
+			$response['msg'] = validation_errors();
+			$response['success'] = false;
+		}else{
+			if( $this->sl->check($data['skills_id'], $data['membership_id']) == true ){
+				$response["msg"] = "This membership already exists.";
+				$response["success"] = false;
+			}else{
+				$sm = array(
+					'skills_id' => $data['skills_id'],
+					'membership_id' => $data['membership_id']
+				);
+
+				$result = $this->sl->create($sm);
+
+				if( $result == false ){
+					$response['success'] = false;
+					$response['msg'] = 'Unable to process your request right now. Please try again later.';
+				}else{
+					$sl['sm_id'] = $result;
+					$response['details'] = array(
+						"skills_memberships" => $sm
+					);
+				}
+			}
+		}
+
+		echo json_encode($response);
+	}
+
+	public function remove_skill_membership(){
+		$response = array(
+			'success' => false, 
+			'msg' => "Sorry, but we can't process your request right now. Please try again later." 
+		);
+
+		$this->form_validation->set_rules('id', 'Skills Memberships ID', 'xss_clean|required|trim');
+		if($this->form_validation->run() != true){
+			$response['msg'] = validation_errors();
+			$response['success'] = false;
+		}else{
+			$id = $this->input->post('id');
+			if( $this->sm->delete($id) ){
+				$response['msg'] = 'Successfully deleted.';
+				$response['success'] = true;
+			}		
+		}
+		echo json_encode($response);
+	}
+
 }

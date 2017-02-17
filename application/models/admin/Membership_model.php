@@ -1,17 +1,14 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class License_model extends CI_Model{
+class Membership_model extends CI_Model{
 
 	public function __construct(){
 		parent::__construct();
-		$this->table = "License_master";
-		$this->table_id = "license_id";
+		$this->table = "memberships_master";
+		$this->table_id = "membership_id";
 	}
 
 	public function all($format = 'object'){
-		$this->db->select($this->table.".*, t2.country_name, t3.city_name");
-		$this->db->join('country_master as t2', "t2.country_id = {$this->table}.country_id", 'INNER');
-		$this->db->join('city_master as t3', "t3.city_id = {$this->table}.city_id", 'INNER');
 	    $res = $this->db->get($this->table);
 	    
 		switch ($format) {
@@ -92,17 +89,6 @@ class License_model extends CI_Model{
 		if( $res->num_rows() > 0 )
 			return $format == 'array' ? $res->result_array() : $res->result();
 		return array();
-	}
-
-	public function check($name, $country_id, $city_id){
-		$this->db->select("*");
-		$this->db->where('LOWER(License_name)', strtolower($name));
-		$this->db->where('country_id', $country_id, FALSE);
-		$this->db->where('city_id', $city_id, FALSE);
-		$res = $this->db->get($this->table);
-		if( $res->num_rows() > 0 )
-			return true; // already exists
-		return false;
 	}
 
 }

@@ -1,17 +1,16 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class License_model extends CI_Model{
+class City_model extends CI_Model{
 
 	public function __construct(){
 		parent::__construct();
-		$this->table = "License_master";
-		$this->table_id = "license_id";
+		$this->table = "city_master";
+		$this->table_id = "city_id";
 	}
 
 	public function all($format = 'object'){
-		$this->db->select($this->table.".*, t2.country_name, t3.city_name");
+		$this->db->select($this->table.".*, t2.country_name");
 		$this->db->join('country_master as t2', "t2.country_id = {$this->table}.country_id", 'INNER');
-		$this->db->join('city_master as t3', "t3.city_id = {$this->table}.city_id", 'INNER');
 	    $res = $this->db->get($this->table);
 	    
 		switch ($format) {
@@ -94,15 +93,55 @@ class License_model extends CI_Model{
 		return array();
 	}
 
-	public function check($name, $country_id, $city_id){
+	public function check($name, $country_id){
 		$this->db->select("*");
-		$this->db->where('LOWER(License_name)', strtolower($name));
+		$this->db->where('LOWER(city_name)', "'".strtolower($name)."'", FALSE);
 		$this->db->where('country_id', $country_id, FALSE);
-		$this->db->where('city_id', $city_id, FALSE);
 		$res = $this->db->get($this->table);
 		if( $res->num_rows() > 0 )
 			return true; // already exists
 		return false;
+	}
+
+	// returns data for autocomplete source
+	public function getByCountry($country_id, $format = 'object'){
+		$this->db->select('city_name as text, city_id as id');
+		$this->db->where('country_id', $country_id, false);
+		$results = $this->db->get($this->table);
+		if( $results->num_rows() > 0 )
+			return $format == 'array' ? $results->result_array() : $results->result();
+		return array();
+	}
+
+	public function paginate($page, $term, $country_id){
+	    $resultCount = 25;
+	    $offset = ($page - 1) * $resultCount;
+
+	    $this->db->select('city_name as text, city_id as id');
+	    $this->db->like('name', $term);
+	    $this->db->where('country_id', $country_id);
+	    $this->db->order_by('text', 'ASC');
+	    $this->db->limit($resultCount, $offset); 
+
+	    $res = $this->db->get($this->table);
+
+	    $cities = $res->result_array();
+
+	    $count =  $this->db->count_all_results($this->table);
+
+
+
+	    $endCount = $offset + $resultCount;
+	    $morePages = $endCount > $count;
+
+	    $results = array(
+			"results" => $cities,
+			"pagination" => array(
+				"more" => $morePages
+			)
+	    );
+
+	    return $results;
 	}
 
 }

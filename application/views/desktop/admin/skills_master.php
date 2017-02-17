@@ -21,15 +21,25 @@
                     <h2 class="country-nav-tabs">License for  Skills</h2>
                 </a>
             </li>
+            <li>
+                <a href="#mem_skills" data-toggle="tab">
+                    <h2 class="country-nav-tabs">Membership for  Skills</h2>
+                </a>
+            </li>
         </ul>
 
         <script>
             var functions = <?= json_encode($functions); ?>;
             var skills = <?= json_encode($_skills); ?>;
+
             var qualifications = <?= json_encode($qualifications); ?>;
             var skills_qualifications = <?= json_encode($skills_qualifications); ?>;
+
             var licenses = <?= json_encode($licenses); ?>;
             var skills_licenses = <?= json_encode($skills_licenses); ?>;
+
+            var memberships = <?= json_encode($memberships); ?>;
+            var skills_memberships = <?= json_encode($skills_memberships); ?>;
         </script>
 
         <div class="tab-content">
@@ -79,7 +89,7 @@
                                 <?= $skill->specialised == 'Y' ? "Yes" : "No"; ?>
                             </td>
                             <td class="vert-align">
-                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skill" data-id="<?= $skill->skills_id; ?>" id="btn_delete_skill" title="Delete">
+                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skill" data-id="<?= $skill->skills_id; ?>" title="Delete">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </button>
                             </td>
@@ -128,7 +138,7 @@
                                 <?= $sq->qualifications_name; ?>
                             </td>
                             <td class="vert-align">
-                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skills-qualifications" id="btn_delete_sq" data-id="<?= $sq->sq_id; ?>" title="Delete">
+                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skills-qualifications" data-id="<?= $sq->sq_id; ?>" title="Delete">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </button>
                             </td>
@@ -188,6 +198,55 @@
                     </tbody>
                 </table>
             </div><!-- end License for Skills -->
+
+            <div class="tab-pane" role="tabpanel" id="mem_skills"><!-- start Membership for Skills -->
+                <table class="table borderless">
+                    <tr>
+                        <form id="frm_add_skills_memberships" method="post">
+                            <td>
+                                <select id="sb_membership_skills" name="skills_id" class="form-control" data-text="------ Select Skills ------" data-allow-clear="true"></select>
+                            </td>
+                            <td>
+                                <select id="sb_memberships" name="membership_id" class="form-control" data-text="------ Select Membership ------" data-allow-clear="true"></select>
+                            </td>
+                            <td>
+                                <input type="button" id="btn_add_skills_memberships" class="btn btn-sm user-btn btn-noradius" value="Update">
+                            </td>
+                        </form>
+                    </tr>
+                </table>
+
+                <table class="table table-striped margin-top display datatable" id="tbl_skills_memberships">
+                    <thead class="red-table-header">
+                        <tr>
+                            <th>Skills Name</th>
+                            <th>Membership Name</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach ($skills_memberships as $key => $membership) :
+                    ?>
+                        <tr>
+                            <td class="vert-align">
+                                <?= ucwords($membership->skills_name); ?>
+                            </td>
+                            <td class="vert-align">
+                                <?= $membership->membership_name; ?>
+                            </td>
+                            <td class="vert-align">
+                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skills-memberships" data-id="<?= $membership->sm_id; ?>" title="Delete">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    <?php
+                    endforeach;
+                    ?>
+                    </tbody>
+                </table>
+            </div><!-- end Membership for Skills-->
         </div>
     </div>
 </div>

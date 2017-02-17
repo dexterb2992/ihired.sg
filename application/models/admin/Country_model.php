@@ -241,6 +241,36 @@ class Country_model extends CI_Model{
 		return false;
 	}
 
+	public function paginate($page, $term){
+	    $resultCount = 25;
+	    $offset = ($page - 1) * $resultCount;
+
+	    $this->db->select('country_name as text, country_id as id');
+	    $this->db->like('country_name', $term);
+	    $this->db->order_by('text', 'ASC');
+	    $this->db->limit($resultCount, $offset); 
+
+	    $res = $this->db->get($this->table);
+
+	    $countries = $res->result_array();
+
+	    $count =  $this->db->count_all_results($this->table);
+
+
+
+	    $endCount = $offset + $resultCount;
+	    $morePages = $endCount > $count;
+
+	    $results = array(
+			"results" => $countries,
+			"pagination" => array(
+				"more" => $morePages
+			)
+	    );
+
+	    return $results;
+	}
+
 }
 
 
