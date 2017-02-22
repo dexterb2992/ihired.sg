@@ -16,13 +16,18 @@
             btn_add_company = $("#btn_add_company"),
             btn_edit_company = $(".btn-edit-company"),
             btn_delete_company = $(".btn-delete-company"),
+            open_to = $("#open_to"),
+            txt_open_to = $("#txt_open_to"),
+
+            // hidden fields for autocomplete
+            hidden_industry_id = $("#industry_id"),
 
             tbl_companies = $("#tbl_companies");
 
         var dt_tbl_companies = $("#tbl_companies").DataTable({
-            "bSort" : false,
-            "iDisplayLength": 100,
-        });
+                "bSort" : false,
+                "iDisplayLength": 100,
+            });
 
         txt_company.keyup(function(){
             dt_tbl_companies
@@ -32,20 +37,33 @@
         });
 
         txt_industry.autocomplete({
-            source: convertToAutoCompleteSource(industries, "industry_name")
+            source: industries,
+            minLength:0,
+            select: function (event, ui) {
+                console.log(ui.item);
+                $("#txt_industry").val(ui.item.label); // display the selected text
+                hidden_industry_id.val(ui.item.value); // save selected id to hidden input
+                return false;
+            },
+            response: function(event, ui) {
+                // ui.content is the array that's about to be sent to the response callback.
+                if (ui.content.length === 0) {
+                    hidden_industry_id.val(0);
+                }
+            } 
+        }).on('focus', function() { 
+            $(this).keydown(); 
         });
 
+
+        /* ================= add buttons =====================================*/ 
         btn_add_company.on("click", function (){
             console.log(dt_tbl_companies);
             var company = txt_company.val(),
-                industry = txt_industry.val(),
-                industry_id = 0;
+                industry_id = hidden_industry_id.val(),
+                industry = txt_industry.val();
 
-            if( company == "" || industry == "" ) return false;
-
-            // let's find the industry if it already exists
-            var check = findIndustry(industry);
-            if( check !== false ) industry_id = check;
+            if( company == "" || industry_id == 0 ) return false;
 
             $.ajax({
                 url: base_url+"admin/company/create",
@@ -60,10 +78,6 @@
                     if( data.success == true ){
                         companies.push(data.details.company);
 
-                        tbl_companies.dataTable({
-                            destroy: true
-                        });
-
                         var btn_edit = btn_edit_company.first().clone(),
                             btn_delete = btn_delete_company.first().clone();
 
@@ -74,11 +88,12 @@
                         // Run some tests here http://jsperf.com/jquery-vs-createelement
 
                         var div = $(document.createElement('div')).append(btn_edit).append(btn_delete);
-                        var new_row = $(document.createElement('tr')).attr("data-id", data.details.company.company_id);
-                        new_row.append( $('<td>'+company+'</td><td>'+industry+'</td><td>'+div.html()+'</td>') );
-
-                        tbl_companies.children('tbody').prepend(new_row);
-                        tbl_companies.dataTable();
+                        
+                        dt_tbl_companies.row.add([
+                            company,
+                            industry,
+                            div.html()
+                        ]).draw( false );
 
                         flashdata_status(data.msg, 'Saved.');
                     }else{
@@ -91,6 +106,8 @@
             });
         });
 
+
+        /* ================================ delete buttons =============================== */
         $(document).on("click", ".btn-delete-company", function (){
             var $this = $(this),
                 id = $this.attr('data-id');
@@ -115,20 +132,18 @@
                             type: 'post',
                             success: function(data) {
                                 if(data.success == true) {
+
                                     // removes company from autocomplete source
-                                    removeCompany(id);
-                                    // refresh autocomplete source of company
-                                    txt_company.autocomplete({
-                                        source: companies
+                                    companies = companies.filter(function(company) {
+                                        return company.value != id;
                                     });
 
-                                    tbl_companies.dataTable({
-                                        destroy: true
-                                    });
 
-                                    $this.closest('tr').slideUp('slow');
                                     flashdata_status(data.msg, 'Saved.');
-                                    tbl_companies.dataTable();
+
+                                    dt_tbl_companies.row( $this.parents('tr') )
+                                        .remove()
+                                        .draw(false);
                                 } else {
                                     flashdata_status(data.msg);
                                 }
@@ -141,38 +156,10 @@
                 }
             });
         });
+
+        
     });
 
     // The rest of the codes goes here
-
-    function findIndustry(industryName){
-        var str1 = industryName.toLowerCase();
-
-        var industry = industries.filter(function (industry){
-            var str2 = industry.industry_name.toLowerCase();
-            if(str2 == str1){
-                return industry;
-            }
-        });
-
-        return industry.length > 0 ? industry[0].industry_id : false;
-    } 
-
-    function removeCompany(id){
-        companies.filter(function (company, index){
-            if( company.company_id == id ){
-                return companies.splice(index, 1);
-            }
-        });
-    }
-
-    function convertToAutoCompleteSource(source, indexName){
-        var results = [];
-        $.each(source, function (i, row){
-            results.push(row[indexName]);
-        });
-
-        return results;
-    }
 
 }));

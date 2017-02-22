@@ -1,12 +1,12 @@
 $(function() {
 
-	var quTable = $('#tbl_dt_qualifications').DataTable({
+	var dtTable_qualifications = $('#tbl_dt_qualifications').DataTable({
         "bSort" : false,
         "iDisplayLength": 100
 	});
 
     $('#qualifications_name').keyup(function(){
-        quTable
+        dtTable_qualifications
             .column(0)
             .search(this.value)
             .draw();
@@ -16,7 +16,7 @@ $(function() {
 
       	var frm = $("#frm_qualifications").serialize();
       	$.ajax({
-      		url : base_url + 'admin/qualifications/add_qualifications',
+      		url : base_url + 'admin/qualifications/create',
       		data: frm,
       		dataType: 'JSON',
       		type: 'POST',
@@ -24,7 +24,7 @@ $(function() {
     			var new_tr = '';
     			if( data.success==true ) {
 
-    			  	quTable
+    			  	dtTable_qualifications
     				    .column(0)
     				    .search('')
     				    .draw(false);
@@ -56,7 +56,7 @@ $(function() {
     });
 
     $('body').on('click', '.rm_qu', function() {
-
+        var $this = $(this);
       	var ctr = ($(this).attr('id')).split('_');
 
         bootbox.confirm({
@@ -73,13 +73,16 @@ $(function() {
             callback: function (ans) {
                 if(ans) {
                   $.ajax({
-                    url : base_url + 'admin/qualifications/delete_qualifications',
+                    url : base_url + 'admin/qualifications/delete',
                     data: { quId : ctr[2] },
                     dataType: 'JSON',
                     type: 'POST',
                     success: function(data) {
                       if(data.data==true) {
-                        $("#tr_qu_"+ctr[2]).fadeOut('slow');
+                        // $("#tr_qu_"+ctr[2]).fadeOut('slow');
+                        dtTable_licenses.row( $this.parents('tr') )
+                                        .remove()
+                                        .draw(false);
                       }
                     }
                   });

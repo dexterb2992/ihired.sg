@@ -1,22 +1,18 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Company_model extends CI_Model{
-	protected $table;
-	protected $table_id;
+class Qualification_model extends CI_Model{
 
 	public function __construct(){
 		parent::__construct();
-		$table = "company_master";
-		$table_id = "company_id";
-		$this->table = $table;
-		$this->table_id = $table_id;
+		$this->table = "qualifications_master";
+		$this->table_id = "qualifications_id";
 	}
 
 	public function all($format = 'object'){
-		$res = $this->db->get($this->table);
-
-		$this->db->select("{$this->table}.*, t2.industry_name");
-	    $this->db->join("industry_master as t2", "{$this->table}.industry_id = t2.industry_id", 'INNER');
+		$this->db->select($this->table.".*, t2.full_name, t3.function_name, t4.type");
+		$this->db->join('user_master as t2', "t2.user_id = {$this->table}.user_id", 'INNER');
+		$this->db->join('function_master as t3', "t3.function_id = {$this->table}.function_id", 'INNER');
+		$this->db->join('qualifications_type as t4', "t4.qt_id = {$this->table}.qt_id", 'INNER');
 	    $res = $this->db->get($this->table);
 	    
 		switch ($format) {
@@ -99,51 +95,15 @@ class Company_model extends CI_Model{
 		return array();
 	}
 
-	public function get_opento($company_id, $format = 'object'){
-		$this->db->where('company_id', $company_id);
-		$res = $this->db->get('open_to');
-
-		if( $res->num_rows() > 0 )
-			return $format == 'array' ? $res->result_array() : $res->result();
-		return array();
-	}
-
-	/**
-	 * @param array $values
-	 */
-	public function create_opento($values){
-		$this->db->set($values);
-		$this->db->insert('open_to');
-
-		$insert_id = $this->db->insert_id();
-		if( $insert_id > 0 ) 
-			return $insert_id;
-		return false;
-	}
-
-	/**
-	 *  @param integer $id
-	 *
-	 */
-	public function delete_opento($id){
-		$this->db->where('open_to_id', $id);
-		$this->db->delete('open_to');
-
-		if($this->db->affected_rows())
-			return true;
-		return false;
-	}
-
-
-	public function check_opento($name, $company_id){
+	public function check($name, $function_id, $qt_id){
 		$this->db->select("*");
-		$this->db->where('LOWER(open_to)', strtolower($name));
-		$this->db->where('company_id', $company_id, FALSE);
-		$res = $this->db->get('open_to');
+		$this->db->where('LOWER(qualifications_name)', strtolower($name));
+		$this->db->where('function_id', $function_id, FALSE);
+		$this->db->where('qt_id', $qt_id, FALSE);
+		$res = $this->db->get($this->table);
 		if( $res->num_rows() > 0 )
 			return true; // already exists
 		return false;
 	}
-
 
 }

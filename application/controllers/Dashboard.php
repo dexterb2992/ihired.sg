@@ -52,7 +52,7 @@ class Dashboard extends Base_Controller{
 						'label' => 'Shift Master',
 					),
 					array(
-						'uri' => 'admin/qualifications',
+						'uri' => 'admin/qualification',
 						'label' => 'Qualifications Master',
 					),
 					array(

@@ -34,7 +34,7 @@ class Qualifications extends Base_Controller {
 		$this->load->view('desktop/admin/qualifications_list', $data);
 	}
 
-	public function add_qualifications() {
+	public function create() {
 
 		$res['data'] = null; 
 		$res['success'] = null; 
@@ -48,7 +48,7 @@ class Qualifications extends Base_Controller {
 				'user_id' 			=> $this->session->userdata('u_id')
 			);
 
-			$raw = $this->qualifications->add_qualifications($data);
+			$raw = $this->qualifications->create($data);
 			if($raw!=FALSE) {
 				foreach ($raw as $key => $val) {
 					$res['data'] = array(
@@ -79,12 +79,12 @@ class Qualifications extends Base_Controller {
 		return TRUE;
 	}
 
-	public function delete_qualifications() {
+	public function delete() {
 
 		$data['data'] = NULL;
 		$quId = $this->input->post('quId');
 		if($quId) {
-			$raw = $this->qualifications->delete_qualifications($quId);
+			$raw = $this->qualifications->delete($quId);
 			if($raw!=FALSE) {
 				$data['data'] = true;
 			}

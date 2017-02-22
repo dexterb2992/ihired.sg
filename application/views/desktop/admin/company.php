@@ -5,7 +5,7 @@
     	<h2 class="user-content-head">Manage Company</h2>
         <div id="m_company">
 	        <script>
-	        	var industries = <?= json_encode($industries); ?>;
+	        	var industries = <?= json_encode($_industries); ?>;
 	        	var companies = <?= json_encode($companies); ?>;
 	        </script>
             <table class="table borderless">
@@ -20,6 +20,7 @@
                     	<input type="text" name="company_name" id="txt_company" class="form-control input-sm frm_add_element">
                     </td>
                     <td>
+                        <input type="hidden" name="industry_id" id="industry_id">
                         <input type="text" name="industry" id="txt_industry" class="form-control input-sm frm_add_element">
                     </td>
                     <td>
@@ -48,7 +49,6 @@
                             <?= $company['industry_name']; ?>
                         </td>
                         <td class="vert-align">
-                        	<!-- <button type="button" class="btn btn-primary btn-xs btn-noradius btn-edit-company" data-id="<?= $company['company_id']; ?>">Edit</button> -->
                             <a class="btn btn-primary btn-xs btn-noradius btn-edit-company" href="<?= base_url('admin/company/edit/'.$company['company_id']); ?>">Edit</a>
                             <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-company" data-id="<?= $company['company_id']; ?>">Delete</button>
                         </td>

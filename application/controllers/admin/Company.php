@@ -28,6 +28,14 @@ class Company extends Base_Controller {
 
 		$data['companies'] = $companies;
 		$data['industries'] = $industries;
+		$data['_industries'] = array();
+
+		foreach ($data['industries'] as $industry) {
+			$data['_industries'][] = array(
+				'label' => $industry['industry_name'],
+				'value' => $industry['industry_id']
+			);
+		}
 
 		$this->load->view('desktop/admin/company', $data);
 	}
@@ -92,11 +100,11 @@ class Company extends Base_Controller {
 		$data['js_module'] = 'edit_company';
 		$data['company'] = $this->company->find($id);
 		$data['industries'] = $this->industry->get("industry_id as id, industry_name as text");
-		// $data['countries'] = $this->country->get("country_id as id, country_name as text");
-		// $data['countries'] = $this->country->get();
 		$countries = $this->country->get();
 		$data['countries'] = array();
 		$data['currencies'] = array();
+		$data['_open_to'] = array();
+		$data['open_to'] = $this->company->get_opento($id);
 
 		foreach ($data['industries'] as $industry) {
 			if( $industry->id == $data['company']->industry_id ){
@@ -104,30 +112,30 @@ class Company extends Base_Controller {
 			}
 		}
 
-		foreach ($countries as $country) {
-			// if( $country->id == $data['company']->country_id ){
-				// $data['company']->country_name = $country->text;
-				if( $country->country_id == $data['company']->country_id ){
-					$data['company']->country_name = $country->country_name;
-					$data['company']->currency = "$country->currency_name ($country->currency_symbol)";
-				}
-				
-				$currency = new stdClass();
-				$currency->label = "$country->currency_name ($country->currency_symbol)";
-				$currency->value = $country->country_id;
-				$data['currencies'][] = $currency;
-
-				$n_country = new stdClass();
-				$n_country->id = $country->country_id;
-				$n_country->text = $country->country_name;
-
-				$data['countries'][] = $n_country;
-			// }
+		foreach ($data['open_to'] as $row) {
+			$data['_open_to'][] = array(
+				'label' => $row->open_to,
+				'value' => $row->open_to_id
+			);
 		}
 
+		foreach ($countries as $country) {
+			if( $country->country_id == $data['company']->country_id ){
+				$data['company']->country_name = $country->country_name;
+				$data['company']->currency = "$country->currency_name ($country->currency_symbol)";
+			}
+			
+			$currency = new stdClass();
+			$currency->label = "$country->currency_name ($country->currency_symbol)";
+			$currency->value = $country->country_id;
+			$data['currencies'][] = $currency;
 
+			$n_country = new stdClass();
+			$n_country->id = $country->country_id;
+			$n_country->text = $country->country_name;
 
-		// $data['currencies'] = $this->country->get("country_id as value, CONCAT(currency_name, ' (', currency_symbol, ')') as label");
+			$data['countries'][] = $n_country;
+		}
 
 		$target_dir = $_SERVER['DOCUMENT_ROOT'].'/assets/images/company_logos/';
 		$imgd = base_url('assets/images/pix.jpg');
@@ -244,6 +252,63 @@ class Company extends Base_Controller {
 		if( $this->company->delete($id) ){
 			$response['msg'] = 'Company successfully deleted.';
 			$response['success'] = true;
+		}
+
+		echo json_encode($response);
+	}
+
+	public function delete_opento(){
+		$id = $this->input->post('id');
+
+		$response = array(
+			'success' => false, 
+			'msg' => "Sorry, but we can't process your request right now. Please try again later." 
+		);
+
+		if( $this->company->delete_opento($id) ){
+			$response['msg'] = 'A record was successfully deleted.';
+			$response['success'] = true;
+		}
+
+		echo json_encode($response);
+	}
+
+	public function create_opento(){
+		$this->form_validation->set_rules('open_to', 'Open To', 'xss_clean|required|trim');
+
+		$response = array(
+			'success' => true, 
+			'msg' => "New record has been added." 
+		);
+
+		if($this->form_validation->run() != true){
+			$response['msg'] = validation_errors();
+			$response['success'] = false;
+		}else{
+			$data = $this->input->post();
+			if( $this->company->check_opento($data['open_to'], $data['company_id']) ){
+				$response['msg'] = "This record already exists.";
+				$response['success'] = false;
+			}else{
+				$opento = array(
+					'open_to' => $data['open_to'],
+					'company_id' => $data['company_id'],
+					'user_id' => $this->session->userdata('user_id')
+				);
+
+
+				$result = $this->company->create_opento($opento);
+
+				if( $result == false ){
+					$response['success'] = false;
+					$response['msg'] = 'Unable to save a record right now. Please try again later.';
+				}else{
+					$opento['open_to_id'] = $result;
+					$response['details'] = array(
+						"opento" => $opento
+					);
+				}
+			}
 		}
 
 		echo json_encode($response);

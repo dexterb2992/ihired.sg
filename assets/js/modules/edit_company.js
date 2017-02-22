@@ -18,18 +18,35 @@
             company_id = $("#company_id"),
             btn_submit = $("#btn_submit"),
             form_update = $("#form_update"),
-            deleteBtn = $("#deleteBtn"),
             picBox = $('#picBox'),
             uploadBtn = $('#uploadBtn'),
             hasImg = $("#hasImg"),
             readableImg = $("#readableImg");
 
+        /* text fields */
+        var open_to = $("#open_to"),
+            txt_open_to = $("#txt_open_to");
+
+        /* buttons */
+        var deleteBtn = $("#deleteBtn"),
+            btn_add_opento = $("#btn_add_opento"),
+            btn_delete_opento = $(".btn-delete-opento").first();
+
+        /* dropdown boxes */
         var i_country = new Select2PagingPlugin(),
         	i_industry = new Select2PagingPlugin();
 
         i_country.init(sb_country, countries);
         i_industry.init(sb_industry, industries);
 
+        /* datatables */
+
+        var dt_tbl_opento = $("#tbl_opento").DataTable({
+                "bSort" : false,
+                "iDisplayLength": 100,
+            });
+
+        /* autocomplete textfields */
         txt_currency.autocomplete({
             source: currencies,
             minLength:0,
@@ -47,6 +64,34 @@
             } 
         }).on('focus', function() { 
             $(this).keydown(); 
+        });
+
+        txt_open_to.autocomplete({
+            source: _open_to,
+            minLength:0,
+            select: function (event, ui) {
+                console.log(ui.item);
+                $("#txt_open_to").val(ui.item.label); // display the selected text
+                $("#open_to").val(ui.item.value); // save selected id to hidden input
+                return false;
+            },
+            response: function(event, ui) {
+                // ui.content is the array that's about to be sent to the response callback.
+                if (ui.content.length === 0) {
+                    open_to.val("");
+                }
+            } 
+        }).on('focus', function() { 
+            $(this).keydown(); 
+        });
+
+
+        /* = = = = = = dataTables' search field = = = = = */
+        txt_open_to.bind("change keyup", function(){
+            dt_tbl_opento
+                .column(0)
+                .search(this.value)
+                .draw();
         });
 
         form_update.on("submit", function (e){
@@ -144,6 +189,102 @@
             onError: function() {
                 flashdata_status("Unable to upload file.");
             }
+        });
+
+
+        /* ======== = add buttons ========= = =  == */
+        btn_add_opento.on("click", function (){
+            var opento = txt_open_to.val();
+            var company_id = $(this).attr("data-company-id");
+
+            if( open_to.val() != "" ){
+                flashdata_status(opento + " already exists.");
+                return false;
+            }
+
+            $.ajax({
+                url: base_url+"admin/company/create_opento",
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    company_id: company_id,
+                    open_to: opento
+                },
+                success: function (data){
+                    if( data.success == true ){
+                        _open_to.push(data.details.opento);
+
+                    
+                        var btn_delete = btn_delete_opento.clone();
+
+                        btn_delete.attr("data-id", data.details.opento.open_to_id);
+
+                        var div = $(document.createElement('div')).append(btn_delete);
+                        
+
+                        dt_tbl_opento.row.add([
+                            opento,
+                            div.html()
+                        ]).draw( false );
+
+                        flashdata_status(data.msg, 'Saved.');
+                    }else{
+                        flashdata_status(data.msg);
+                    }
+                },
+                error: function (data){
+                    console.warn(data);
+                }
+            });
+        });
+
+
+        /*  ========= delete buttons ============= = */
+        $(document).on("click", ".btn-delete-opento", function (){
+            var $this = $(this),
+                id = $this.attr('data-id');
+
+            bootbox.confirm({
+                title: "Delete Confirmation",
+                message: "Do you wish to delete this record?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="glyphicon glyphicon-remove"></i> No'
+                    },
+                    confirm: {
+                        label: '<i class="glyphicon glyphicon-ok"></i> Yes'
+                    }
+                },
+                callback: function (ans) {
+                    if(ans) {
+                        $.ajax({
+                            url : base_url + 'admin/company/delete_opento',
+                            data: { id: id },
+                            dataType: 'json',
+                            type: 'post',
+                            success: function(data) {
+                                if(data.success == true) {
+                                    // removes company from autocomplete source
+                                    _open_to = _open_to.filter(function(row) {
+                                        return row.value != id;
+                                    });
+
+                                    flashdata_status(data.msg, 'Saved.');
+
+                                    dt_tbl_opento.row( $this.parents('tr') )
+                                        .remove()
+                                        .draw(false);
+                                } else {
+                                    flashdata_status(data.msg);
+                                }
+                            },
+                            error: function (data){
+                                console.warn(data);
+                            }
+                        });
+                    }
+                }
+            });
         });
 
     });

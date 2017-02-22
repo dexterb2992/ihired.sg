@@ -19,7 +19,7 @@ class Qualifications_model extends CI_Model {
 		return FALSE;
 	}
 
-	public function add_qualifications($data) {
+	public function create($data) {
 
 		$this->db->set($data);
 		$this->db->insert('qualifications_master');
@@ -41,7 +41,7 @@ class Qualifications_model extends CI_Model {
 		return FALSE;
 	}
 
-	public function delete_qualifications($deId) {
+	public function delete($deId) {
 
 		$this->db->where('qualifications_id', $deId);
 		$this->db->delete('qualifications_master');
