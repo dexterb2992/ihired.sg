@@ -145,5 +145,106 @@ class Company_model extends CI_Model{
 		return false;
 	}
 
+	public function get_locations($company_id, $format = 'object'){
+		$this->db->select('company_locations.*, t1.company_name, t2.country_name, t3.city_name, t4.town_name, t5.station_name, t6.zone, t7.state_name');
+		$this->db->join('company_master as t1', 't1.company_id = company_locations.company_id', 'inner');
+		$this->db->join('country_master as t2', 't2.country_id = company_locations.country_id', 'inner');
+		$this->db->join('state_master as t7', 't7.state_id = company_locations.state_id', 'left');
+		$this->db->join('city_master as t3', 't3.city_id = company_locations.city_id', 'inner');
+		$this->db->join('town_master as t4', 't4.town_id = company_locations.town_id', 'inner');
+		$this->db->join('train_master as t5', 't5.train_id = company_locations.train_id', 'left');
+		$this->db->join('zone_master as t6', 't6.zone_id = company_locations.zone_id', 'left');
+		
+		
+		$res =$this->db->get('company_locations');
+	    
+		switch ($format) {
+			case 'array':
+				$res = $res->result_array();
+				break;
+				
+			case 'json':
+				$res = json_encode($res->result_array());
+				break;
 
+			default:
+				$res = $res->result();
+				break;
+		}
+
+		return $res;
+	}
+
+
+	/**
+	 * @param array $values
+	 */
+	public function create_location($values){
+		$this->db->set($values);
+		$this->db->insert('company_locations');
+
+		$insert_id = $this->db->insert_id();
+		if( $insert_id > 0 ) 
+			return $insert_id;
+		return false;
+	}
+
+	/**
+	 *  @param integer $id
+	 *
+	 */
+	public function delete_location($id){
+		$this->db->where('location_id', $id);
+		$this->db->delete('company_locations');
+
+		if($this->db->affected_rows())
+			return true;
+		return false;
+	}
+
+	/**
+	 * @param array $values
+	 *
+	 */
+	public function check_location($values){
+		$this->db->select("*");
+
+		$this->db->where('company_id', $values['company_id']);
+		$this->db->where('country_id', $values['country_id']);
+		$this->db->where('state_id', $values['state_id']);
+		$this->db->where('city_id', $values['city_id']);
+		$this->db->where('town_id', $values['town_id']);
+		$this->db->where('train_id', $values['train_id']);
+		$this->db->where('zone_id', $values['zone_id']);
+
+		$res = $this->db->get('company_locations');
+
+		if( $res->num_rows() > 0 )
+			return true; // already exists
+		return false;
+	}
+
+	/** 
+	 * @param integer $id
+	 *
+	 */
+	public function find_location($id){
+		$this->db->select('company_locations.*, t1.company_name, t2.country_name, t3.city_name, t4.town_name, t5.station_name, t6.zone, t7.state_name');
+		$this->db->join('company_master as t1', 't1.company_id = company_locations.company_id', 'inner');
+		$this->db->join('country_master as t2', 't2.country_id = company_locations.country_id', 'inner');
+		$this->db->join('state_master as t7', 't7.state_id = company_locations.state_id', 'left');
+		$this->db->join('city_master as t3', 't3.city_id = company_locations.city_id', 'inner');
+		$this->db->join('town_master as t4', 't4.town_id = company_locations.town_id', 'inner');
+		$this->db->join('train_master as t5', 't5.train_id = company_locations.train_id', 'left');
+		$this->db->join('zone_master as t6', 't6.zone_id = company_locations.zone_id', 'left');
+		$this->db->where('location_id', $id);
+		
+		
+		$res = $this->db->get('company_locations');
+
+		if( $res->num_rows() > 0 )
+			return $res->row();
+		
+		return false;
+	}
 }

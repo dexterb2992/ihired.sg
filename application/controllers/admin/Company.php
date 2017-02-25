@@ -104,7 +104,9 @@ class Company extends Base_Controller {
 		$data['countries'] = array();
 		$data['currencies'] = array();
 		$data['_open_to'] = array();
+		$data['_locations'] = array();
 		$data['open_to'] = $this->company->get_opento($id);
+		$data['locations'] = $this->company->get_locations($id);
 
 		foreach ($data['industries'] as $industry) {
 			if( $industry->id == $data['company']->industry_id ){
@@ -257,22 +259,6 @@ class Company extends Base_Controller {
 		echo json_encode($response);
 	}
 
-	public function delete_opento(){
-		$id = $this->input->post('id');
-
-		$response = array(
-			'success' => false, 
-			'msg' => "Sorry, but we can't process your request right now. Please try again later." 
-		);
-
-		if( $this->company->delete_opento($id) ){
-			$response['msg'] = 'A record was successfully deleted.';
-			$response['success'] = true;
-		}
-
-		echo json_encode($response);
-	}
-
 	public function create_opento(){
 		$this->form_validation->set_rules('open_to', 'Open To', 'xss_clean|required|trim');
 
@@ -313,5 +299,86 @@ class Company extends Base_Controller {
 
 		echo json_encode($response);
 	}
+
+	public function delete_opento(){
+		$id = $this->input->post('id');
+
+		$response = array(
+			'success' => false, 
+			'msg' => "Sorry, but we can't process your request right now. Please try again later." 
+		);
+
+		if( $this->company->delete_opento($id) ){
+			$response['msg'] = 'A record was successfully deleted.';
+			$response['success'] = true;
+		}
+
+		echo json_encode($response);
+	}
+
+	public function create_location($company_id){
+        $this->form_validation->set_rules('country_id', 'Country', 'xss_clean|required|trim');
+        $this->form_validation->set_rules('city_id', 'City', 'xss_clean|required|trim');
+        $this->form_validation->set_rules('town_id', 'Town', 'xss_clean|required|trim');
+
+        $response = array(
+            'success' => true, 
+            'msg' => "New record has been added." 
+        );
+
+        if($this->form_validation->run() != true){
+            $response['msg'] = validation_errors();
+            $response['success'] = false;
+        }else{
+            $data = $this->input->post();
+            $data['company_id'] = $company_id;
+
+            if( $this->company->check_location($data) ){
+                $response['msg'] = "This record already exists.";
+                $response['success'] = false;
+            }else{
+                $location = array(
+                    "company_id" => $data['company_id'],
+                    "country_id" => $data['country_id'],
+                    "state_id" => $data['state_id'],
+                    "city_id" => $data['city_id'],
+                    "town_id" => $data['town_id'],
+                    "train_id" => $data['train_id'],
+                    "zone_id" => $data['zone_id']
+                );
+
+
+                $result = $this->company->create_location($location);
+
+                if( $result == false ){
+                    $response['success'] = false;
+                    $response['msg'] = 'Unable to save a record right now. Please try again later.';
+                }else{
+                    $new_location = $this->company->find_location($result);
+                    $response['details'] = array(
+                        "location" => $new_location
+                    );
+                }
+            }
+        }
+
+        echo json_encode($response);
+    }
+
+    public function delete_location(){
+        $id = $this->input->post('id');
+
+        $response = array(
+            'success' => false, 
+            'msg' => "Sorry, but we can't process your request right now. Please try again later." 
+        );
+
+        if( $this->company->delete_location($id) ){
+            $response['msg'] = 'A record was successfully deleted.';
+            $response['success'] = true;
+        }
+
+        echo json_encode($response);
+    }
 
 }

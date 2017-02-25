@@ -27,6 +27,11 @@
             		<h2 class="country-nav-tabs">Open To</h2>
             	</a>
             </li>
+            <li>
+            	<a href="#company_locations" data-toggle="tab">
+            		<h2 class="country-nav-tabs">Locations</h2>
+            	</a>
+            </li>
         </ul>
 
         <div class="tab-content">
@@ -100,8 +105,8 @@
 		        		<div class="col-md-3">
 		        			<div class="form-group">
 		        				<label for="country_id">Country</label>
-		        				<select name="country_id" id="country_id" class="form-control" data-text="Country">
-		        					<option value="<?= $company->country_id; ?>" selected required>
+		        				<select name="country_id" id="country_id" class="form-control" data-text="Country"required>
+		        					<option value="<?= $company->country_id; ?>" selected>
 		        						<?= $company->country_name; ?>
 		        					</option>
 		        				</select>
@@ -126,10 +131,8 @@
 	        </div>
 
 	        <div role="tabpanel" class="tab-pane" id="company_opento">
-	        	<h2 class="user-content-head">
-		    		<a href="<?= base_url('admin/company'); ?>">
+	        	<h2 class="user-content-head" data-bind='company_name'>
 		    			<?= ucfirst($company->company_name); ?>
-		    		</a>
 		    	</h2>
 
 		    	<div class="row">
@@ -166,6 +169,95 @@
 			                        </td>
 			                        <td class="vert-align">
 			                            <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-opento" data-id="<?= $row->open_to_id; ?>">Delete</button>
+			                        </td>
+			                    </tr>
+			                <?php
+			                endforeach;
+			                ?>
+			                </tbody>
+			            </table>
+		    		</div>
+		    	</div>
+	        </div>
+
+	        <div role="tabpanel" class="tab-pane" id="company_locations">
+	        	<h2 class="user-content-head" data-bind="company_name">
+		    		<?= ucfirst($company->company_name); ?>
+		    	</h2>
+
+		    	<div class="row">
+		    		<div class="col-md-12">
+		    			<form id="frm_add_location" method="post">
+		                    <table class="table borderless">
+		                    	<td>
+			                        <select id="sb_country" name="country_id" class="form-control" data-text="- Select Country -">
+			                        	<option value="<?= $company->country_id; ?>" selected>
+			        						<?= $company->country_name; ?>
+			        					</option>
+			                        </select>
+			                    </td>
+			                    <td data-hide-when="country_has_no_states">
+			                    	<select id="sb_state" name="state_id" class="form-control" data-text="- Select State -"></select>
+			                    </td>
+			                    <td>
+			                       <select id="sb_city" name="city_id" class="form-control" data-text="- Select City -"></select>
+			                    </td>
+			                    <td>
+			                       <select id="sb_town" name="town_id" class="form-control" data-text="- Select Town -"></select>
+			                    </td>
+			                    <td>
+			                       <select id="sb_train" name="train_id" class="form-control" data-text="- Select Train Station -"></select>
+			                    </td>
+			                    <td>
+			                       <select id="sb_zone" name="zone_id" class="form-control" data-text="- Select Zone -"></select>
+			                    </td>
+			                    <td>
+			                        <input type="button" id="btn_add_location" data-company-id="<?= $company->company_id; ?>" class="btn btn-sm user-btn btn-noradius" value="Update">
+			                    </td>
+		                    </table>
+		                </form>
+		    		</div>
+		    	</div>
+
+		    	<div class="row">
+		    		<div class="com-md-12">
+		    			<table class="table table-striped margin-top display datatable" id="tbl_location">
+			                <thead class="red-table-header">
+			                    <tr>
+			                        <th>Country</th>
+			                        <th>State</th>
+			                        <th>City</th>
+			                        <th>Town</th>
+			                        <th>Train Station</th>
+			                        <th>Zone</th>
+			                        <th width="10%">&nbsp;</th>
+			                    </tr>
+			                </thead>
+			                <tbody>
+			                <?php
+			                foreach ($locations as $location) :
+			                ?>
+			                    <tr>
+			                        <td class="vert-align">
+			                            <?= ucwords($location->country_name); ?>
+			                        </td>
+			                        <td class="vert-align">
+			                            <?= ucwords($location->state_name); ?>
+			                        </td>
+			                        <td class="vert-align">
+			                            <?= ucwords($location->city_name); ?>
+			                        </td>
+			                        <td class="vert-align">
+			                            <?= ucwords($location->town_name); ?>
+			                        </td>
+			                        <td class="vert-align">
+			                            <?= ucwords($location->station_name); ?>
+			                        </td>
+			                        <td class="vert-align">
+			                            <?= ucwords($location->zone); ?>
+			                        </td>
+			                        <td class="vert-align">
+			                            <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-location" data-id="<?= $location->location_id; ?>">Delete</button>
 			                        </td>
 			                    </tr>
 			                <?php

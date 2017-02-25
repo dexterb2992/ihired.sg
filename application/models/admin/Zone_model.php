@@ -1,11 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class City_model extends CI_Model{
+class Zone_model extends CI_Model{
 
 	public function __construct(){
 		parent::__construct();
-		$this->table = "city_master";
-		$this->table_id = "city_id";
+		$this->table = "zone_master";
+		$this->table_id = "zone_id";
 	}
 
 	public function all($format = 'object'){
@@ -95,7 +95,7 @@ class City_model extends CI_Model{
 
 	public function check($name, $country_id){
 		$this->db->select("*");
-		$this->db->where('LOWER(city_name)', "'".strtolower($name)."'", FALSE);
+		$this->db->where('LOWER(zone)', "'".strtolower($name)."'", FALSE);
 		$this->db->where('country_id', $country_id, FALSE);
 		$res = $this->db->get($this->table);
 		if( $res->num_rows() > 0 )
@@ -108,8 +108,8 @@ class City_model extends CI_Model{
 		$resultCount = 25;
 	    $offset = ($page - 1) * $resultCount;
 
-		$this->db->select('city_name as text, '.$this->table_id.' as id');
-		$this->db->like('city_name', $term);
+		$this->db->select('zone as text, '.$this->table_id.' as id');
+		$this->db->like('zone', $term);
 		$this->db->where('country_id', $country_id, false);
 
 		$this->db->order_by('text', 'ASC');
@@ -136,8 +136,8 @@ class City_model extends CI_Model{
 	    $resultCount = 25;
 	    $offset = ($page - 1) * $resultCount;
 
-	    $this->db->select('city_name as text, city_id as id');
-	    $this->db->like('city_name', $term);
+	    $this->db->select('zone as text, '.$this->table_id.' as id');
+	    $this->db->like('zone', $term);
 	    $this->db->where('country_id', $country_id);
 	    $this->db->order_by('text', 'ASC');
 	    $this->db->limit($resultCount, $offset); 

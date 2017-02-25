@@ -16,12 +16,21 @@
             txt_currency = $("#currency"),
             currency_id = $("#currency_id"),
             company_id = $("#company_id"),
+            company_name = $("#company_name"),
             btn_submit = $("#btn_submit"),
             form_update = $("#form_update"),
             picBox = $('#picBox'),
             uploadBtn = $('#uploadBtn'),
             hasImg = $("#hasImg"),
             readableImg = $("#readableImg");
+
+        /* select boxes */
+        var sb_country_ = $("#sb_country"),
+            sb_state_ = $("#sb_state"),
+            sb_city_ = $("#sb_city"),
+            sb_town_ = $("#sb_town"),
+            sb_train_ = $("#sb_train"),
+            sb_zone_ = $("#sb_zone");
 
         /* text fields */
         var open_to = $("#open_to"),
@@ -30,21 +39,179 @@
         /* buttons */
         var deleteBtn = $("#deleteBtn"),
             btn_add_opento = $("#btn_add_opento"),
-            btn_delete_opento = $(".btn-delete-opento").first();
+            btn_add_location = $("#btn_add_location"),
+            btn_delete_opento = $(".btn-delete-opento").first(),
+            btn_delete_location = $(".btn-delete-location").first();
 
-        /* dropdown boxes */
+        /* datatables */
+        var dt_tbl_opento = $("#tbl_opento").DataTable({
+                "iDisplayLength": 100
+            }),
+
+            dt_tbl_location = $("#tbl_location").DataTable({
+                "iDisplayLength": 100
+            });
+
+        /* select2 dropdown boxes */
         var i_country = new Select2PagingPlugin(),
         	i_industry = new Select2PagingPlugin();
 
         i_country.init(sb_country, countries);
         i_industry.init(sb_industry, industries);
 
-        /* datatables */
+        initializeSelect2Boxes();
 
-        var dt_tbl_opento = $("#tbl_opento").DataTable({
-                "bSort" : false,
-                "iDisplayLength": 100,
+        sb_country_.select2({
+            placeholder: sb_country_.attr("data-text"),
+            width: '100%',
+            theme: 'bootstrap',
+            allowClear: true,
+            ajax: {
+                url: base_url+'common/get_countries',
+                dataType: 'json',
+                data: function(params) {
+                    return {
+                        term: params.term || '',
+                        page: params.page || 1
+                    }
+                },
+                cache: true
+            }
+        });
+
+        if( sb_country_.val() != "" ){
+            instantiateSelect2Boxes( sb_country_.val() );
+        }
+
+
+        /* ================== START select2 dropdown on change events ====================*/
+        function instantiateSelect2Boxes(country_id){
+            checkCountryHasStates(country_id, function (){
+                $('*[data-hide-when="country_has_no_states"]').fadeIn();
+
+                sb_state_.select2({
+                    placeholder: sb_state_.attr("data-text"),
+                    width: '100%',
+                    theme: 'bootstrap',
+                    allowClear: true,
+                    ajax: {
+                        url: base_url+'common/get_states/'+country_id,
+                        dataType: 'json',
+                        data: function(params) {
+                            return {
+                                term: params.term || '',
+                                page: params.page || 1
+                            }
+                        },
+                        cache: true
+                    }
+                });
+            }, function (){
+                $('*[data-hide-when="country_has_no_states"]').fadeOut();
             });
+
+            sb_city_.select2({
+                placeholder: sb_city_.attr("data-text"),
+                width: '100%',
+                theme: 'bootstrap',
+                allowClear: true,
+                ajax: {
+                    url: base_url+'common/get_cities/'+country_id,
+                    dataType: 'json',
+                    data: function(params) {
+                        return {
+                            term: params.term || '',
+                            page: params.page || 1
+                        }
+                    },
+                    cache: true
+                }
+            });
+
+            sb_town_.select2({
+                placeholder: sb_town_.attr("data-text"),
+                width: '100%',
+                theme: 'bootstrap',
+                allowClear: true,
+                ajax: {
+                    url: base_url+'common/get_towns/'+country_id,
+                    dataType: 'json',
+                    data: function(params) {
+                        return {
+                            term: params.term || '',
+                            page: params.page || 1
+                        }
+                    },
+                    cache: true
+                }
+            });
+
+            sb_train_.select2({
+                placeholder: sb_train_.attr("data-text"),
+                width: '100%',
+                theme: 'bootstrap',
+                allowClear: true,
+                ajax: {
+                    url: base_url+'common/get_train_stations/'+country_id,
+                    dataType: 'json',
+                    data: function(params) {
+                        return {
+                            term: params.term || '',
+                            page: params.page || 1
+                        }
+                    },
+                    cache: true
+                }
+            });
+
+            sb_zone_.select2({
+                placeholder: sb_zone_.attr("data-text"),
+                width: '100%',
+                theme: 'bootstrap',
+                allowClear: true,
+                ajax: {
+                    url: base_url+'common/get_zones/'+country_id,
+                    dataType: 'json',
+                    data: function(params) {
+                        return {
+                            term: params.term || '',
+                            page: params.page || 1
+                        }
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function initializeSelect2Boxes(){
+            $('#sb_state, #sb_city, #sb_town, #sb_train, #sb_zone').each(function (){
+                if( !$(this).data('select2') ){
+                    $(this).select2({
+                        placeholder: $(this).attr("data-text"),
+                        width: '100%',
+                        theme: 'bootstrap',
+                        allowClear: true
+                    });
+                }
+                
+            });
+        }
+
+        function destroySelect2Boxes(){
+            $('#sb_state, #sb_city, #sb_town, #sb_train, #sb_zone').each(function (){
+                if( $(this).data('select2') ){
+                    $(this).select2('destroy').html("")
+                }
+            });
+        }
+
+        sb_country_.on("change", function(){
+            var country_id = $(this).val();
+            destroySelect2Boxes();
+            instantiateSelect2Boxes(country_id);
+        });
+
+        /* ======= END select2 dropdown onchange event ===================== */
 
         /* autocomplete textfields */
         txt_currency.autocomplete({
@@ -110,6 +277,7 @@
                 success: function (data){
                     if( data.success ){
                         flashdata_status(data.msg, 'Saved.');
+                        $('*[data-bind="company_name"]').text(company_name.val());
                     }else{
                         flashdata_status(data.msg);
                     }
@@ -192,7 +360,7 @@
         });
 
 
-        /* ======== = add buttons ========= = =  == */
+        /* ======== = START add buttons ========= = =  == */
         btn_add_opento.on("click", function (){
             var opento = txt_open_to.val();
             var company_id = $(this).attr("data-company-id");
@@ -238,8 +406,62 @@
             });
         });
 
+        btn_add_location.on("click", function (){
+            var company_id = $(this).attr("data-company-id");
+            var data = {
+                country_id: sb_country_.val(),
+                state_id: sb_state_.val(),
+                city_id: sb_city_.val(),
+                town_id: sb_town_.val(),
+                train_id: sb_train_.val(),
+                zone_id: sb_zone_.val()
+            };
 
-        /*  ========= delete buttons ============= = */
+            $.ajax({
+                url: base_url+"admin/company/create_location/"+company_id,
+                type: 'post',
+                dataType: 'json',
+                data: data,
+                success: function (data){
+                    if( data.success == true ){
+                        _open_to.push(data.details.location);
+
+                    
+                        var btn_delete = btn_delete_location.clone();
+
+                        btn_delete.attr("data-id", data.details.location.location_id);
+
+                        var div = $(document.createElement('div')).append(btn_delete);
+                        
+                        var a = data.details.location;
+
+                        dt_tbl_location.row.add([
+                            a.company_name,
+                            a.state_name,
+                            a.city_name,
+                            a.town_name,
+                            a.station_name,
+                            a.zone,
+                            div.html()
+                        ]).draw( false );
+
+                        // refresh select2 boxes
+                        $('#sb_state, #sb_city, #sb_town, #sb_train, #sb_zone').select2('destroy').html("");
+                        initializeSelect2Boxes();
+
+                        flashdata_status(data.msg, 'Saved.');
+                    }else{
+                        flashdata_status(data.msg);
+                    }
+                },
+                error: function (data){
+                    console.warn(data);
+                }
+            });
+        });
+
+
+        /*  ========= START delete buttons ============= = */
         $(document).on("click", ".btn-delete-opento", function (){
             var $this = $(this),
                 id = $this.attr('data-id');
@@ -287,8 +509,63 @@
             });
         });
 
+        $(document).on("click", ".btn-delete-location", function (){
+            var $this = $(this),
+                id = $this.attr('data-id');
+
+            bootbox.confirm({
+                title: "Delete Confirmation",
+                message: "Do you wish to delete this record?",
+                buttons: {
+                    cancel: {
+                        label: '<i class="glyphicon glyphicon-remove"></i> No'
+                    },
+                    confirm: {
+                        label: '<i class="glyphicon glyphicon-ok"></i> Yes'
+                    }
+                },
+                callback: function (ans) {
+                    if(ans) {
+                        $.ajax({
+                            url : base_url + 'admin/company/delete_location',
+                            data: { id: id },
+                            dataType: 'json',
+                            type: 'post',
+                            success: function(data) {
+                                if(data.success == true) {
+                                    flashdata_status(data.msg, 'Saved.');
+
+                                    dt_tbl_location.row( $this.parents('tr') )
+                                        .remove()
+                                        .draw(false);
+                                } else {
+                                    flashdata_status(data.msg);
+                                }
+                            },
+                            error: function (data){
+                                console.warn(data);
+                            }
+                        });
+                    }
+                }
+            });
+        });
     });
 
     // The rest of the codes goes here
 
+    function checkCountryHasStates(country_id, callbackTrue, callbackFalse){
+        $.ajax({
+            url: base_url+"common/check_country_states/"+country_id,
+            type: 'get',
+            dataType: 'json',
+            success: function (data){
+                if( data.response == true ){
+                    if( callbackTrue ) callbackTrue();
+                }else{
+                    if( callbackFalse ) callbackFalse();
+                }
+            }
+        });
+    }
 }));

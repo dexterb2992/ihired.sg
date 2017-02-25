@@ -271,6 +271,22 @@ class Country_model extends CI_Model{
 	    return $results;
 	}
 
+	/**
+	 * Checks if a country has a state 
+	 * 
+	 * @param integer $country_id
+	 *
+	 * @return boolean
+	 */
+	public function has_states($country_id){
+		$this->db->where('country_id', $country_id);
+		$res = $this->db->get('state_master');
+
+		if( $res->num_rows() > 0 )
+			return true;
+		return false;
+	}
+
 }
 
 

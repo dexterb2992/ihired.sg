@@ -31,7 +31,7 @@
             theme: 'bootstrap',
             allowClear: true,
             ajax: {
-                url: base_url+'admin/membership/get_countries',
+                url: base_url+'common/get_countries',
                 dataType: 'json',
                 data: function(params) {
                     return {
@@ -55,7 +55,7 @@
             sb_city.select2('destroy').html("");
 
             $.ajax({
-                url: base_url+'admin/membership/get_cities/'+country_id,
+                url: base_url+'common/get_cities/'+country_id,
                 type: 'get',
                 dataType: 'json',
                 success: function (data){
