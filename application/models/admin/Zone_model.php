@@ -95,8 +95,8 @@ class Zone_model extends CI_Model{
 
 	public function check($name, $country_id){
 		$this->db->select("*");
-		$this->db->where('LOWER(zone)', "'".strtolower($name)."'", FALSE);
-		$this->db->where('country_id', $country_id, FALSE);
+		$this->db->where('LOWER(zone)', strtolower($name));
+		$this->db->where('country_id', $country_id);
 		$res = $this->db->get($this->table);
 		if( $res->num_rows() > 0 )
 			return true; // already exists

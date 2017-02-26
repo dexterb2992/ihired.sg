@@ -101,7 +101,7 @@ class Skills_model extends CI_Model{
 
 	public function check($skillname){
 		$this->db->select("*");
-		$this->db->where('LOWER(skills_name)', "'".strtolower($skillname)."'", FALSE);
+		$this->db->where('LOWER(skills_name)', strtolower($skillname));
 		$res = $this->db->get($this->table);
 		if( $res->num_rows() > 0 )
 			return true; // already exists
