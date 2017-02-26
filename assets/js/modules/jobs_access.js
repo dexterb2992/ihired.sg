@@ -14,7 +14,9 @@
             s_function = $("#select_function"),
             btn_add_access = $("#btn_add_access"),
             tbl_jobs_access = $("#tbl_jobs_access")
-            btn_delete = $(".btn-delete-access").first().clone();
+            btn_delete = $('<button type="button" class="btn btn-primary btn-xs btn-delete-access" title="Delete this record">'+
+                                '<i class="glyphicon glyphicon-remove"></i>'+
+                            '</button>');
 
         var i_companies = new Select2PagingPlugin(),
             i_functions = new Select2PagingPlugin();
@@ -44,13 +46,12 @@
             $(this).keydown(); 
         });
 
-        var dt_jobs_access = $("#tbl_jobs_access").DataTable({
-            "bSort" : false,
+        var dt_tbl_jobs_access = $("#tbl_jobs_access").DataTable({
             "iDisplayLength": 50,
         });
 
         s_user.keyup(function(){
-            dt_jobs_access
+            dt_tbl_jobs_access
                 .column(0)
                 .search(this.value)
                 .draw();
@@ -84,30 +85,23 @@
                     },
                     success: function (data){
                         if( data.success == true ){
-                            //jobs_access.push(data.details.jobs_access);
-
-                            tbl_jobs_access.dataTable({
-                                destroy: true
-                            });
 
                             btn_delete.attr("data-id", data.details.jobs_access.id);
 
                             // I used document.createElement because it's the fastest way to create a dom element
                             // Run some tests here http://jsperf.com/jquery-vs-createelement
 
-                            var btn = $(document.createElement('div')).append(btn_delete).html(),
-                                row = $(document.createElement('tr')),
-                                jobs_access = data.details.jobs_access,
-                                tds = '<td>'+jobs_access.full_name+'</td>'+
-                                    '<td>'+jobs_access.company_name+'</td>'+
-                                    '<td>'+jobs_access.function_name+'</td>'+
-                                    '<td>'+jobs_access.date+'</td>'+
-                                    '<td>'+btn+'</td>';
+                            var btn = $(document.createElement('div')).append(btn_delete).html();
 
-                            row.append( $(tds) );
+                            var jobs_access = data.details.jobs_access;
 
-                            tbl_jobs_access.children('tbody').prepend(row);
-                            tbl_jobs_access.dataTable();
+                            dt_tbl_jobs_access.row.add([
+                                jobs_access.full_name,
+                                jobs_access.company_name,
+                                jobs_access.function_name,
+                                jobs_access.date,
+                                btn
+                            ]).draw( false );
 
                             flashdata_status(data.msg, 'Saved.');
                         }else{
@@ -146,13 +140,13 @@
                             type: 'post',
                             success: function(data) {
                                 if(data.success == true) {
-                                    tbl_jobs_access.dataTable({
-                                        destroy: true
-                                    });
 
-                                    $this.closest('tr').slideUp('slow');
                                     flashdata_status(data.msg, 'Saved.');
-                                    tbl_jobs_access.dataTable();
+
+                                    dt_tbl_jobs_access.row( $this.parents('tr') )
+                                        .remove()
+                                        .draw(false);
+
                                 } else {
                                     flashdata_status(data.msg);
                                 }

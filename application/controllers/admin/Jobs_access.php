@@ -48,20 +48,27 @@ class Jobs_access extends Base_Controller {
 			'msg' => 'A job posting access has been granted.'
 		);
 
-		$result = $this->jobs_access->create($jobs_access);
-
-		if( $result == false ){
-			$res['success'] = false;
-			$res['msg'] = 'Unable to process your request right now. Please try again later.';
-		}else{
-			$jobs_access['id'] = $result;
-			$jobs_access['company_name'] = $cname;
-			$jobs_access['full_name'] = $uname;
-			$jobs_access['function_name'] = $fn_name;
-
-			$res['details'] = array(
-				"jobs_access" => $jobs_access
+		if( $this->jobs_access->exists($user_id, $company_id, $function_id) ){
+			$res = array(
+				'success' => false,
+				'msg' => 'This access already exists.'
 			);
+		}else{
+			$result = $this->jobs_access->create($jobs_access);
+
+			if( $result == false ){
+				$res['success'] = false;
+				$res['msg'] = 'Unable to process your request right now. Please try again later.';
+			}else{
+				$jobs_access['id'] = $result;
+				$jobs_access['company_name'] = $cname;
+				$jobs_access['full_name'] = $uname;
+				$jobs_access['function_name'] = $fn_name;
+
+				$res['details'] = array(
+					"jobs_access" => $jobs_access
+				);
+			}
 		}
 
 		echo json_encode($res);

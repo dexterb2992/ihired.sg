@@ -32,9 +32,9 @@
                                 '</button>'),
 
             btn_delete_skill = raw_btn_delete.clone().addClass('btn-delete-skill'),
-            btn_delete_skills_qualifications = raw_btn_delete.clone().addClass(".btn-delete-skills-qualifications"),
-            btn_delete_skills_licenses = raw_btn_delete.clone().addClass(".btn-delete-skills-licenses"),
-            btn_delete_skills_memberships = raw_btn_delete.clone().addClass(".btn-delete-skills-memberships"),
+            btn_delete_skills_qualifications = raw_btn_delete.clone().addClass("btn-delete-skills-qualifications"),
+            btn_delete_skills_licenses = raw_btn_delete.clone().addClass("btn-delete-skills-licenses"),
+            btn_delete_skills_memberships = raw_btn_delete.clone().addClass("btn-delete-skills-memberships"),
 
             btn_add_skill = $("#btn_add_skill"),
             btn_add_skills_qualifications = $("#btn_add_skills_qualifications"),
@@ -119,7 +119,7 @@
         });
 
 
-        /* = = = = = = = update buttons = = = = = = = = = */
+        /* = = = = = = = add buttons = = = = = = = = = */
         btn_add_skill.on("click", function (){
         	var $this = $(this);
 

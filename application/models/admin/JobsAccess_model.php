@@ -87,4 +87,25 @@ class JobsAccess_model extends CI_Model {
 			return true;
 		return false;
 	}
+
+	public function check($user_id, $company_id, $function_id){
+		$this->db->select("*");
+		$this->db->where('user_id', $user_id);
+		$this->db->where('company_id', $company_id);
+		$this->db->where('function_id', $function_id);
+		$res = $this->db->get($this->table);
+		if( $res->num_rows() > 0 )
+			return true; // already exists
+		return false;
+	}
+
+	/**
+	 * Alias for 'check' function
+	 * @param integer user_id
+	 * @param integer company_id
+	 * @param integer function_id
+	 */
+	public function exists($user_id, $company_id, $function_id){
+		return $this->check($user_id, $company_id, $function_id);
+	}
 }
