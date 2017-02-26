@@ -41,14 +41,14 @@
     <script src="<?= asset_url('jquery-plugin/chosen/js/chosen.jquery.js'); ?>" ></script>
     <script src="<?= asset_url('js/SimpleAjaxUploader.js'); ?>"></script>
   
-    <script type="text/javascript">
+    <script>
       var base_url  = '<?= base_url(); ?>';
       var module    = '<?= $js_module; ?>';
     </script>
 
-    <script type="text/javascript" src="<?= base_url();?>assets/js/common.js"></script>
+    <script src="<?= base_url();?>assets/js/common.js"></script>
     <?php if (!empty($js_module)): ?>
-    <script type="text/javascript" src="<?= base_url();?>assets/js/modules/<?= $js_module; ?>.js"></script>
+    <script src="<?= base_url();?>assets/js/modules/<?= $js_module; ?>.js"></script>
     <?php endif; ?>
     
 
@@ -57,7 +57,7 @@
       <link rel="stylesheet" href="<?= asset_url('css/styles.css')?>">
       <link rel="stylesheet" type="text/css" href="<?= asset_url('css/menu.css')?>"/>
 
-      <script type="text/javascript" src="<?= base_url(); ?>assets/js/plugins.js"></script>
+      <script src="<?= base_url(); ?>assets/js/plugins.js"></script>
 
 
 		<link href="<?= asset_url('images/icons/favicon.ico');?>" rel="shortcut icon" type="image/x-icon">

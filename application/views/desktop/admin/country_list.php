@@ -3,17 +3,25 @@
     <div class="user-container-head">Country Management</div>
     <div class="user-content">
         <ul class="nav nav-tabs country-nav" data-tabs="tabs">
-            <li class="active"><a href="#m_country" data-toggle="tab"><h2 class="country-nav-tabs">Manage Country</h2></a>
+            <li class="active">
+            	<a href="#m_country" data-toggle="tab">
+            		<h2 class="country-nav-tabs">Manage Country</h2>
+            	</a>
             </li>
-            <li><a href="#m_city" data-toggle="tab"><h2 class="country-nav-tabs">Manage City</h2></a>
+            <li>
+	            <a href="#m_city" data-toggle="tab">
+	            	<h2 class="country-nav-tabs">Manage City</h2>
+	            </a>
             </li>
-            <li><a href="#m_town" data-toggle="tab"><h2 class="country-nav-tabs">Manage Town</h2></a>
+            <li>
+	            <a href="#m_town" data-toggle="tab">
+	            	<h2 class="country-nav-tabs">Manage Town</h2>
+	            </a>
             </li>
         </ul>
 
         <div class="tab-content">
             <div class="tab-pane active" id="m_country">
-
                 <form class="margin-top col-lg-10" id="frm_country" method="post">
                     <table class="table borderless">
                         <tr>
@@ -87,6 +95,56 @@
             </div>
             <!-- END Country -->
 
+            <div class="tab-pane" id="m_state">
+            	<form class="margin-top col-lg-7" id="frm_state" method="post">
+                    <table class="table borderless">
+                        <tr>
+                            <td>State Name</td>
+                            <td>Country</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" name="state_name" id="state_name" class="form-control input-sm">
+                            </td>
+                            <td>
+                                <select class="form-control" name="country_id" id="sb_country"></select>
+                            </td>
+                            <td>
+                                <input type="button" id="btn_add_state" class="btn btn-sm user-btn btn-noradius" value="Update">
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+
+                <table id="tbl_states" class="table table-striped margin-top display">
+                    <thead class="red-table-header">
+                        <tr>
+                            <th width="45%">State</th>
+                            <th width="45%">Country</th>
+                            <th width="10%">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    	<?php foreach($states as $state): ?>
+                    		<tr>
+                    			<td>
+                    				<?= $state->state_name; ?>
+                    			</td>
+                    			<td>
+                    				<?= $state->country_name; ?>
+                    			</td>
+                    			<td>
+                    				<button type="button" class="btn-delete-state btn btn-primary btn-xs btn-noradius" data-id="<?= $state->state_id; ?>">
+                    					Delete
+                    				</button>
+                    			</td>
+                    		</tr>
+                    	<?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
             <div class="tab-pane" id="m_city">
 
                 <form class="margin-top col-lg-7" id="frm_city" method="post">
@@ -123,25 +181,30 @@
                         </tr>
                     </thead>
                     <tbody id="tb_ci">
-                        <?php if(isset($data_city) && ! empty($data_city)) : foreach ($data_city as $key=> $val) : $ctr = $val['city_id']; ?>
-                        <tr id="<?= 'tr_ci_'.$ctr ?>">
-                            <td id="<?= 'td_ci_name_'.$ctr?>" class="vert-align">
-                                <?= ucwords($val[ 'city_name']); ?>
-                            </td>
-                            <td id="<?= 'td_ci_country_'.$ctr?>" class="vert-align">
-                                <?= ucwords($val[ 'country_name']); ?>
-                            </td>
-                            <td id="<?= 'td_ci_date_'.$ctr?>" class="vert-align">
-                                <?= $val[ 'date_added']; ?>
-                            </td>
-                            <td id="<?= 'td_ci_added_'.$ctr?>" class="vert-align">
-                                <?= isset($val[ 'added_by']) ? ucwords($val[ 'added_by']) : ''; ?>
-                            </td>
-                            <td id="<?= 'td_ci_btn_'.$ctr?>" class="vert-align">
-                                <button type="button" class="btn btn-primary btn-xs btn-noradius rm_ci" id="<?= 'rm_ci_'.$ctr?>">Delete</button>
-                            </td>
-                        </tr>
-                        <?php endforeach; endif; ?>
+                        <?php 
+                        	if(isset($data_city) && ! empty($data_city)): 
+                        		foreach ($data_city as $key=> $val) : $ctr = $val['city_id']; 
+                        	?>
+		                        <tr id="<?= 'tr_ci_'.$ctr ?>">
+		                            <td id="<?= 'td_ci_name_'.$ctr?>" class="vert-align">
+		                                <?= ucwords($val[ 'city_name']); ?>
+		                            </td>
+		                            <td id="<?= 'td_ci_country_'.$ctr?>" class="vert-align">
+		                                <?= ucwords($val[ 'country_name']); ?>
+		                            </td>
+		                            <td id="<?= 'td_ci_date_'.$ctr?>" class="vert-align">
+		                                <?= $val[ 'date_added']; ?>
+		                            </td>
+		                            <td id="<?= 'td_ci_added_'.$ctr?>" class="vert-align">
+		                                <?= isset($val[ 'added_by']) ? ucwords($val[ 'added_by']) : ''; ?>
+		                            </td>
+		                            <td id="<?= 'td_ci_btn_'.$ctr?>" class="vert-align">
+		                                <button type="button" class="btn btn-primary btn-xs btn-noradius rm_ci" id="<?= 'rm_ci_'.$ctr?>">Delete</button>
+		                            </td>
+		                        </tr>
+                        <?php   endforeach;
+                        	endif;
+                        ?>
                     </tbody>
                 </table>
 
@@ -273,5 +336,5 @@
     </div>
 </div>
 
-
+<script src="<?= base_url();?>assets/js/modules/manage_state.js"></script>
 <?php $this->load->view('includes/footer'); ?>

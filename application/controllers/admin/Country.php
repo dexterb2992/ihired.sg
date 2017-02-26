@@ -6,9 +6,9 @@ class Country extends Base_Controller {
 	public function __construct(){
 
 		parent::__construct();
-		$this->module 		= basename(dirname(__DIR__));
-		$this->class 			= $this->router->class;
-		$this->method 		= $this->router->method;
+		$this->module	= basename(dirname(__DIR__));
+		$this->class	= $this->router->class;
+		$this->method	= $this->router->method;
 		$this->module_url = $this->class.'/'.$this->method;
 
 		$this->load->model('admin/Country_model', 'country', true);
@@ -19,24 +19,27 @@ class Country extends Base_Controller {
 		$data['headers']	= $this;
 		$data['js_module'] = $this->class;
 
+		$this->load->model('admin/State_model', 'state', true);
+
 		$raw = $this->country->get_list();
 		
 		if($raw!=FALSE && is_array($raw)) {
 			foreach ($raw as $key => $val) {
 				$data['data'][] = array(
-					'country_id' 			=> $val['country_id'], 
-					'country_name' 		=> strtolower($val['country_name']),
-					'nationality' 		=> strtolower($val['nationality']),
+					'country_id'	=> $val['country_id'], 
+					'country_name'	=> strtolower($val['country_name']),
+					'nationality'	=> strtolower($val['nationality']),
 					'currency_name' 	=> strtolower($val['currency_name']),
 					'currency_symbol' => strtoupper($val['currency_symbol']),
-					'date_added' 			=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
-					'added_by' 				=> strtolower($val['short_name'])
+					'date_added'	=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
+					'added_by'		=> strtolower($val['short_name'])
 				);
 			}
 		}
-		$data['data_city'] 			= $this->country->get_city_data();
-		$data['data_town'] 			= $this->country->get_town_data();
+		$data['data_city']	= $this->country->get_city_data();
+		$data['data_town']	= $this->country->get_town_data();
 		$data['nationalities']	= 	$this->country->get_nationalities();
+		$data['states'] = $this->state->all();
 
 		$this->load->view('desktop/admin/country_list', $data);
 	}
@@ -60,11 +63,11 @@ class Country extends Base_Controller {
 		if($raw_city!=FALSE) {
 			foreach ($raw_city as $key => $val) {
 				$data[] = array(
-					'city_id' 			=> $val['city_id'], 
-					'city_name' 		=> strtolower($val['city_name']),
+					'city_id'	=> $val['city_id'], 
+					'city_name'	=> strtolower($val['city_name']),
 					'country_name' 	=> strtolower($val['country_name']),
-					'date_added' 		=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
-					'added_by' 			=> strtolower($val['short_name'])
+					'date_added'	=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
+					'added_by'	=> strtolower($val['short_name'])
 				);
 			}
 		}
@@ -91,12 +94,12 @@ class Country extends Base_Controller {
 		if($raw_town!=FALSE) {
 			foreach ($raw_town as $key => $val) {
 				$data[] = array(
-					'town_id' 			=> $val['town_id'], 
-					'town_name' 		=> strtolower($val['town_name']),
-					'city_name' 		=> strtolower($val['city_name']),
+					'town_id'	=> $val['town_id'], 
+					'town_name'	=> strtolower($val['town_name']),
+					'city_name'	=> strtolower($val['city_name']),
 					'country_name' 	=> strtolower($val['country_name']),
-					'date_added' 		=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
-					'added_by' 			=> strtolower($val['short_name'])
+					'date_added'	=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
+					'added_by'	=> strtolower($val['short_name'])
 				);
 			}
 		}
@@ -115,31 +118,31 @@ class Country extends Base_Controller {
 
   	if ($this->form_validation->run() === TRUE)	{
 			$data = array(
-				'country_name' 		=> $this->input->post('country_name'),
-				'nationality' 		=> $this->input->post('nationality'),
+				'country_name'	=> $this->input->post('country_name'),
+				'nationality'	=> $this->input->post('nationality'),
 				'currency_name' 	=> $this->input->post('currency_name'),
 				'currency_symbol' => $this->input->post('currency_symbol'),
-				'date_added' 			=> date('Y-m-d'),
-				'user_id' 				=> $this->session->userdata('u_id')
+				'date_added'	=> date('Y-m-d'),
+				'user_id'		=> $this->session->userdata('u_id')
 			);
 
 			$raw = $this->country->add_country($data);
 			if($raw!=FALSE && is_array($raw)) {
 				foreach ($raw as $key => $val) {
 					$res['data'] = array(
-						'country_id' 			=> $val['country_id'], 
-						'country_name' 		=> strtolower($val['country_name']),
-						'nationality' 		=> strtolower($val['nationality']),
+						'country_id'	=> $val['country_id'], 
+						'country_name'	=> strtolower($val['country_name']),
+						'nationality'	=> strtolower($val['nationality']),
 						'currency_name' 	=> strtolower($val['currency_name']),
 						'currency_symbol' => strtoupper($val['currency_symbol']),
-						'date_added' 			=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
-						'added_by' 				=> strtolower($val['short_name'])
+						'date_added'	=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
+						'added_by'		=> strtolower($val['short_name'])
 					);
 				}
 				$res['success'] = true; 
 			}
 		} else {
-  		$res['data'] = validation_errors();
+ 	$res['data'] = validation_errors();
   	}
 		echo json_encode($res);
 	}
@@ -169,8 +172,8 @@ class Country extends Base_Controller {
 
   	if ($this->form_validation->run() === TRUE)	{
 			$data = array(
-				'country_name' 		=> $this->input->post('co_name'),
-				'nationality' 		=> $this->input->post('co_nationality'),
+				'country_name'	=> $this->input->post('co_name'),
+				'nationality'	=> $this->input->post('co_nationality'),
 				'currency_name' 	=> $this->input->post('co_currency'),
 				'currency_symbol' => $this->input->post('co_symbol')
 			);
@@ -181,7 +184,7 @@ class Country extends Base_Controller {
 				$res['success'] = true; 
 			}
 		} else {
-  		$res['data'] = validation_errors();
+ 	$res['data'] = validation_errors();
   	}
 		echo json_encode($res);
 	}
@@ -195,7 +198,7 @@ class Country extends Base_Controller {
 			$raw = $this->country->all_countries($txtVal);
 			if($raw!=FALSE && is_array($raw)) {
 				foreach ($raw as $key => $val) {
-					$row['id'] 		= $val['country_id'];
+					$row['id']	= $val['country_id'];
 					$row['value'] = $val['country_name'];
 					$row['label'] = $val['country_name'];
 					$data[] = $row;
@@ -214,7 +217,7 @@ class Country extends Base_Controller {
 			$raw = $this->country->all_cities($txtVal);
 			if($raw!=FALSE && is_array($raw)) {
 				foreach ($raw as $key => $val) {
-					$row['id'] 		= $val['city_id'];
+					$row['id']	= $val['city_id'];
 					$row['value'] = $val['city_name'];
 					$row['label'] = $val['city_name'];
 					$data[] = $row;
@@ -268,24 +271,24 @@ class Country extends Base_Controller {
 				'city_name' 	=> $this->input->post('city_name'),
 				'country_id' 	=> $this->input->post('h_ci_country_id'),
 				'date_added' 	=> date('Y-m-d'),
-				'user_id' 		=> $this->session->userdata('u_id')
+				'user_id'	=> $this->session->userdata('u_id')
 			);
 
 			$raw = $this->country->add_city($data);
 			if($raw!=false && is_array($raw)) {
 				foreach ($raw as $key => $val) {
 					$res['data'] = array(
-						'city_id' 			=> $val['city_id'], 
-						'city_name' 		=> strtolower($val['city_name']),
+						'city_id'	=> $val['city_id'], 
+						'city_name'	=> strtolower($val['city_name']),
 						'country_name' 	=> strtolower($val['country_name']),
-						'date_added' 		=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
-						'added_by' 			=> strtolower($val['short_name'])
+						'date_added'	=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
+						'added_by'	=> strtolower($val['short_name'])
 					);
 				}
 				$res['success'] = true; 
 			}
 		} else {
-  		$res['data'] = validation_errors();
+ 	$res['data'] = validation_errors();
   	}
 		echo json_encode($res);
 	}
@@ -338,28 +341,28 @@ class Country extends Base_Controller {
   	if ($this->form_validation->run() === TRUE)	{
 			$data = array(
 				'town_name' 	=> $this->input->post('town_name'),
-				'city_id' 		=> $this->input->post('h_to_city_id'),
+				'city_id'	=> $this->input->post('h_to_city_id'),
 				'country_id' 	=> $this->input->post('h_to_country_id'),
 				'date_added' 	=> date('Y-m-d'),
-				'user_id' 		=> $this->session->userdata('u_id')
+				'user_id'	=> $this->session->userdata('u_id')
 			);
 
 			$raw = $this->country->add_town($data);
 			if($raw!=FALSE && is_array($raw)) {
 				foreach ($raw as $key => $val) {
 					$res['data'] = array(
-						'town_id' 			=> $val['town_id'], 
-						'town_name' 		=> strtolower($val['town_name']),
+						'town_id'	=> $val['town_id'], 
+						'town_name'	=> strtolower($val['town_name']),
 						'city_name' 	=> strtolower($val['city_name']),
 						'country_name' 	=> strtolower($val['country_name']),
-						'date_added' 		=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
-						'added_by' 			=> strtolower($val['short_name'])
+						'date_added'	=> ($val['date_added']=='0000-00-00')?'':date('d/m/Y', strtotime($val['date_added'])),
+						'added_by'	=> strtolower($val['short_name'])
 					);
 				}
 				$res['success'] = true; 
 			}
 		} else {
-  		$res['data'] = validation_errors();
+ 	$res['data'] = validation_errors();
   	}
 		echo json_encode($res);
 	}
@@ -401,7 +404,7 @@ class Country extends Base_Controller {
 			$raw = $this->country->get_select_list_data($txtVal, $existing_ids);
 			if($raw!=FALSE && is_array($raw)) {
 				foreach ($raw as $key => $val) {
-					$row['id'] 		= $val['country_id'];
+					$row['id']	= $val['country_id'];
 					$row['label'] = $val['country_name'];
 					$row['value'] = $val['country_name'];
 					$data[] = $row;

@@ -27,10 +27,15 @@
             sb_memberships = $("#sb_memberships");
 
         /* form buttons */
-        var btn_delete_skill = $(".btn-delete-skill").first(),
-            btn_delete_skills_qualifications = $(".btn-delete-skills-qualifications").first(),
-            btn_delete_skills_licenses = $(".btn-delete-skills-licenses").first(),
-            btn_delete_skills_memberships = $(".btn-delete-skills-memberships").first(),
+        var raw_btn_delete = $('<button type="button" class="btn btn-primary btn-xs btn-noradius" title="Delete this record">'+
+                                    '<i class="glyphicon glyphicon-remove"></i>'+
+                                '</button>'),
+
+            btn_delete_skill = raw_btn_delete.clone().addClass('btn-delete-skill'),
+            btn_delete_skills_qualifications = raw_btn_delete.clone().addClass(".btn-delete-skills-qualifications"),
+            btn_delete_skills_licenses = raw_btn_delete.clone().addClass(".btn-delete-skills-licenses"),
+            btn_delete_skills_memberships = raw_btn_delete.clone().addClass(".btn-delete-skills-memberships"),
+
             btn_add_skill = $("#btn_add_skill"),
             btn_add_skills_qualifications = $("#btn_add_skills_qualifications"),
             btn_add_skills_licenses = $("#btn_add_skills_licenses"),

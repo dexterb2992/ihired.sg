@@ -89,7 +89,7 @@
                                 <?= $skill->specialised == 'Y' ? "Yes" : "No"; ?>
                             </td>
                             <td class="vert-align">
-                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skill" data-id="<?= $skill->skills_id; ?>" title="Delete">
+                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skill" data-id="<?= $skill->skills_id; ?>" title="Delete this record">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </button>
                             </td>
@@ -138,7 +138,7 @@
                                 <?= $sq->qualifications_name; ?>
                             </td>
                             <td class="vert-align">
-                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skills-qualifications" data-id="<?= $sq->sq_id; ?>" title="Delete">
+                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skills-qualifications" data-id="<?= $sq->sq_id; ?>" title="Delete this record">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </button>
                             </td>
@@ -187,7 +187,7 @@
                                 <?= $license->License_name; ?>
                             </td>
                             <td class="vert-align">
-                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skills-licenses" data-id="<?= $license->sl_id; ?>" title="Delete">
+                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skills-licenses" data-id="<?= $license->sl_id; ?>" title="Delete this record">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </button>
                             </td>
@@ -236,7 +236,7 @@
                                 <?= $membership->membership_name; ?>
                             </td>
                             <td class="vert-align">
-                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skills-memberships" data-id="<?= $membership->sm_id; ?>" title="Delete">
+                                <button type="button" class="btn btn-primary btn-xs btn-noradius btn-delete-skills-memberships" data-id="<?= $membership->sm_id; ?>" title="Delete this record">
                                     <i class="glyphicon glyphicon-remove"></i>
                                 </button>
                             </td>

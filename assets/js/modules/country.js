@@ -7,9 +7,9 @@ $(function() {
 	var deleteCity;
 	var deleteTown;
 	var oTable 	= $('#tbl_dt_country').DataTable({
-									"bSort" : false,
-									"iDisplayLength": 100,
-								});
+						"bSort" : false,
+						"iDisplayLength": 100,
+					});
 
   $('#co_input_country').keyup(function(){
     oTable
