@@ -62,8 +62,11 @@ class State_model extends CI_Model{
 	 * @param string $format
 	 */
 	public function find($id, $format = 'object'){
+		$this->db->select("$this->table.*, t2.country_name");
+		$this->db->from($this->table);
+		$this->db->join('country_master as t2', "t2.country_id = {$this->table}.country_id", "inner");
 		$this->db->where($this->table_id, $id);
-		$res = $this->db->get($this->table);
+		$res = $this->db->get();
 
 		if( $res->num_rows() > 0 )
 			return $format == 'array' ? $res->row_array() : $res->row();
@@ -101,6 +104,14 @@ class State_model extends CI_Model{
 		if( $res->num_rows() > 0 )
 			return true; // already exists
 		return false;
+	}
+
+	/**
+	 * Just an alias for check function
+	 *
+	 */
+	public function exists($name, $country_id){
+		return $this->check($name, $country_id);
 	}
 
 	// returns data for autocomplete source

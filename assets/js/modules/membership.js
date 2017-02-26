@@ -25,23 +25,8 @@
             btn_add_membership = $("#btn_add_membership");
 
         /** = = = = = = dropdown boxes = = = = = = =  */
-        sb_country.select2({
-            placeholder: sb_country.attr("data-text"),
-            width: '100%',
-            theme: 'bootstrap',
-            allowClear: true,
-            ajax: {
-                url: base_url+'common/get_countries',
-                dataType: 'json',
-                data: function(params) {
-                    return {
-                        term: params.term || '',
-                        page: params.page || 1
-                    }
-                },
-                cache: true
-            }
-        });
+
+        ajaxSelect2(sb_country, base_url+'common/get_countries');
 
         sb_city.select2({
             placeholder: sb_city.attr("data-text"),
@@ -52,17 +37,11 @@
 
         sb_country.on("change", function (){
             var country_id = $(this).val();
-            sb_city.select2('destroy').html("");
+            if( sb_city.data('select2') ){
+                sb_city.select2('destroy').html("");
+            }
 
-            $.ajax({
-                url: base_url+'common/get_cities/'+country_id,
-                type: 'get',
-                dataType: 'json',
-                success: function (data){
-                    var i_lincense = new Select2PagingPlugin();
-                    i_lincense.init(sb_city, data);
-                }
-            })
+            ajaxSelect2(sb_city, base_url+'common/get_cities/'+country_id);
         });
 
         /** = = = = = = dataTables = = = = = = = = = = = = */
@@ -137,52 +116,15 @@
 
         /* = = = = = = = delete buttons = = = = = = = = = */
         $(document).on("click", ".btn-delete-membership", function (){
-        	var $this = $(this),
-                id = $this.attr('data-id');
+        	var id = $this.attr('data-id');
 
-            bootbox.confirm({
-                title: "Delete Confirmation",
-                message: "Do you wish to delete this record?",
-                buttons: {
-                    cancel: {
-                        label: '<i class="glyphicon glyphicon-remove"></i> No'
-                    },
-                    confirm: {
-                        label: '<i class="glyphicon glyphicon-ok"></i> Yes'
-                    }
-                },
-                callback: function (ans) {
-                    if(ans) {
-                        $.ajax({
-                            url : base_url + 'admin/membership/delete',
-                            data: { id: id },
-                            dataType: 'json',
-                            type: 'post',
-                            success: function(data) {
-                                if(data.success == true) {
-                                    // remove from source
-                                    memberships = memberships.filter(function(membership) {
-                                        return membership.value != id;
-                                    });
-                                    // refresh autocomplete
-                                    initAutoComplete(txt_membership_name, $("#txt_membership_name"), memberships, membership_name);
-
-                                    dtTable_memberships.row( $this.parents('tr') )
-                                        .remove()
-                                        .draw(false);
-                                   
-                                    flashdata_status(data.msg, 'Saved.');
-
-                                } else {
-                                    flashdata_status(data.msg);
-                                }
-                            },
-                            error: function (data){
-                                console.warn(data);
-                            }
-                        });
-                    }
-                }
+            addDeleteFunction($(this), base_url+'admin/membership/delete/', dtTable_memberships, function (){
+                // remove from source
+                memberships = memberships.filter(function(membership) {
+                    return membership.value != id;
+                });
+                // refresh autocomplete
+                initAutoComplete(txt_membership_name, $("#txt_membership_name"), memberships, membership_name);               
             });
         });
 

@@ -25,23 +25,7 @@
             btn_add_license = $("#btn_add_license");
 
         /** = = = = = = dropdown boxes = = = = = = =  */
-        sb_country.select2({
-            placeholder: sb_country.attr("data-text"),
-            width: '100%',
-            theme: 'bootstrap',
-            allowClear: true,
-            ajax: {
-                url: base_url+'admin/license/get_countries',
-                dataType: 'json',
-                data: function(params) {
-                    return {
-                        term: params.term || '',
-                        page: params.page || 1
-                    }
-                },
-                cache: true
-            }
-        });
+        ajaxSelect2(sb_country, base_url+'common/get_countries');
 
         sb_city.select2({
             placeholder: sb_city.attr("data-text"),
@@ -54,15 +38,7 @@
             var country_id = $(this).val();
             sb_city.select2('destroy').html("");
 
-            $.ajax({
-                url: base_url+'admin/license/get_cities/'+country_id,
-                type: 'get',
-                dataType: 'json',
-                success: function (data){
-                    var i_lincense = new Select2PagingPlugin();
-                    i_lincense.init(sb_city, data);
-                }
-            })
+            ajaxSelect2(sb_city, base_url+'common/get_cities/'+country_id);
         });
 
         /** = = = = = = dataTables = = = = = = = = = = = = */
@@ -137,54 +113,16 @@
 
         /* = = = = = = = delete buttons = = = = = = = = = */
         $(document).on("click", ".btn-delete-license", function (){
-        	var $this = $(this),
-                id = $this.attr('data-id');
+            var id = $(this).attr('data-id');
+            addDeleteFunction($(this), base_url+'admin/license/delete/', dtTable_licenses, function (){
+                licenses = licenses.filter(function(license) {
+                   return license.value != id;
+                });
 
-            bootbox.confirm({
-                title: "Delete Confirmation",
-                message: "Do you wish to delete this record?",
-                buttons: {
-                    cancel: {
-                        label: '<i class="glyphicon glyphicon-remove"></i> No'
-                    },
-                    confirm: {
-                        label: '<i class="glyphicon glyphicon-ok"></i> Yes'
-                    }
-                },
-                callback: function (ans) {
-                    if(ans) {
-                        $.ajax({
-                            url : base_url + 'admin/license/delete',
-                            data: { id: id },
-                            dataType: 'json',
-                            type: 'post',
-                            success: function(data) {
-                                if(data.success == true) {
-                                    // remove from source
-                                    licenses = licenses.filter(function(license) {
-                                        return license.value != id;
-                                    });
-
-                                    // refresh autocomplete
-                                    initAutoComplete(txt_license_name, $("#txt_license_name"), licenses, license_name);
-
-                                    dtTable_licenses.row( $this.parents('tr') )
-                                        .remove()
-                                        .draw(false);
-                                   
-                                    flashdata_status(data.msg, 'Saved.');
-
-                                } else {
-                                    flashdata_status(data.msg);
-                                }
-                            },
-                            error: function (data){
-                                console.warn(data);
-                            }
-                        });
-                    }
-                }
+               // refresh autocomplete
+               initAutoComplete(txt_license_name, $("#txt_license_name"), licenses, license_name);
             });
+        	
         });
 
 	});

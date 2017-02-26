@@ -9,9 +9,12 @@ class City_model extends CI_Model{
 	}
 
 	public function all($format = 'object'){
-		$this->db->select($this->table.".*, t2.country_name");
+		$this->db->select($this->table.".*, t2.country_name, t3.state_name, t4.full_name");
+		$this->db->from($this->table);
 		$this->db->join('country_master as t2', "t2.country_id = {$this->table}.country_id", 'INNER');
-	    $res = $this->db->get($this->table);
+		$this->db->join('state_master as t3', "{$this->table}.state_id = t3.state_id", 'left');
+		$this->db->join('user_master as t4', "{$this->table}.user_id = t4.user_id", 'inner');
+	    $res = $this->db->get();
 	    
 		switch ($format) {
 			case 'array':
@@ -62,8 +65,14 @@ class City_model extends CI_Model{
 	 * @param string $format
 	 */
 	public function find($id, $format = 'object'){
+		$this->db->select("{$this->table}.*, t2.country_name, t3.state_name, t4.full_name");
+		$this->db->from($this->table);
+		$this->db->join('country_master as t2', "t2.country_id = {$this->table}.country_id", 'INNER');
+		$this->db->join('state_master as t3', "{$this->table}.state_id = t3.state_id", 'left');
+		$this->db->join('user_master as t4', "{$this->table}.user_id = t4.user_id", 'inner');
+
 		$this->db->where($this->table_id, $id);
-		$res = $this->db->get($this->table);
+		$res = $this->db->get();
 
 		if( $res->num_rows() > 0 )
 			return $format == 'array' ? $res->row_array() : $res->row();
@@ -110,7 +119,7 @@ class City_model extends CI_Model{
 
 		$this->db->select('city_name as text, '.$this->table_id.' as id');
 		$this->db->like('city_name', $term);
-		$this->db->where('country_id', $country_id, false);
+		$this->db->where('country_id', $country_id);
 
 		$this->db->order_by('text', 'ASC');
 	    $this->db->limit($resultCount, $offset); 

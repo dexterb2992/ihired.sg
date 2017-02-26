@@ -94,23 +94,4 @@ class University extends Base_Controller {
 		echo json_encode($response);
 	}
 
-	public function get_countries(){
-		$this->load->model('admin/Country_model', 'country', true);
-		$data = $this->input->get();
-		
-		$results = $this->country->paginate($data['page'], $data['term']);
-
-	    echo json_encode($results);
-	}
-
-	public function get_cities($country_id){
-		$this->load->model('admin/City_model', 'city', true);
-
-		$data = $this->input->get();
-		
-		$results = $this->city->getByCountry($country_id);
-
-	    echo json_encode($results);
-	}
-
 }

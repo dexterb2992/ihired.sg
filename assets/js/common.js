@@ -113,7 +113,10 @@ function Select2PagingPlugin() {
     );
 }
 
-
+/**
+ * Initializes autocomplete function to a html element
+ *
+ */
 function initAutoComplete(autocomplete_field, txt_field, source, hidden_field){
     autocomplete_field.autocomplete({
         source: source,
@@ -132,5 +135,108 @@ function initAutoComplete(autocomplete_field, txt_field, source, hidden_field){
         } 
     }).on('focus', function() { 
         $(this).keydown(); 
+    });
+}
+
+function clearFormValues($form){
+    $form.find('input[type="text"]').val("");
+    $form.find('texarea').html("");
+}
+
+/**
+ * Adds a delete function to a specific element
+ *
+ * @param DOM $element
+ * @param string $postUrl
+ * @param DataTable $dataTable
+ *
+ * @return void
+ */
+function addDeleteFunction($element, $postUrl, $dataTable, callback){
+    var $this = $element,
+        id = $this.attr('data-id');
+
+    if( id == "" || id == null || id == undefined ){
+        console.error('An addDeleteFunction requires the element to have a data-id attribute.');
+        return false;
+    }
+
+    if( $postUrl == "" || $postUrl == null || $postUrl == undefined){
+        console.error('addDeleteFunction needs a POST url.');
+        return false;
+    }
+
+    if( $dataTable.row == undefined ){
+        console.error("addDeleteFunction: $dataTable should be an instance of jQuery DataTable. ");
+        return false;
+    }
+
+    bootbox.confirm({
+        title: "Delete Confirmation",
+        message: "Do you wish to delete this record?",
+        buttons: {
+            cancel: {
+                label: '<i class="glyphicon glyphicon-remove"></i> No'
+            },
+            confirm: {
+                label: '<i class="glyphicon glyphicon-ok"></i> Yes'
+            }
+        },
+        callback: function (ans) {
+            if(ans) {
+                $.ajax({
+                    url : $postUrl+id,
+                    dataType: 'json',
+                    type: 'post',
+                    success: function(data) {
+                        if(data.success == true) {
+                            $dataTable
+                                .row( $this.parents('tr') )
+                                .remove()
+                                .draw(false);
+
+                            flashdata_status(data.msg, 'Saved.');
+
+                            if( callback ) callback();
+
+                        } else {
+                            flashdata_status(data.msg);
+                        }
+                    },
+                    error: function (data){
+                        console.warn(data);
+                    }
+                });
+            }
+        }
+    });
+}
+
+
+/**
+ * Converts a select element to a select2 with remote data
+ *
+ * @param DOM select $element
+ * @param string $sourceUrl
+ *
+ * @return void
+ */
+function ajaxSelect2($element, $sourceUrl){
+    $element.select2({
+        placeholder: $element.attr("data-text"),
+        width: '100%',
+        theme: 'bootstrap',
+        allowClear: true,
+        ajax: {
+            url: $sourceUrl,
+            dataType: 'json',
+            data: function(params) {
+                return {
+                    term: params.term || '',
+                    page: params.page || 1
+                }
+            },
+            cache: true
+        }
     });
 }

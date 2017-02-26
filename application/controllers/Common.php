@@ -18,7 +18,7 @@ class Common extends Base_Controller {
 
 		$page = $this->input->get('page', true);
 		$term = $this->input->get('term', true);
-		
+		$page = $page == "" ? 1 : $page;
 		$results = $this->city->getByCountry($page, $term, $country_id);
 
 	    echo json_encode($results);
@@ -29,7 +29,7 @@ class Common extends Base_Controller {
 
 		$page = $this->input->get('page', true);
 		$term = $this->input->get('term', true);
-		
+		$page = $page == "" ? 1 : $page;
 		$results = $this->state->getByCountry($page, $term, $country_id);
 
 	    echo json_encode($results);
@@ -41,7 +41,7 @@ class Common extends Base_Controller {
 
 		$page = $this->input->get('page', true);
 		$term = $this->input->get('term', true);
-		
+		$page = $page == "" ? 1 : $page;
 		$results = $this->state->getByCountry($page, $term, $country_id);
 
 	    echo json_encode($results);
@@ -52,7 +52,7 @@ class Common extends Base_Controller {
 
 		$page = $this->input->get('page', true);
 		$term = $this->input->get('term', true);
-		
+		$page = $page == "" ? 1 : $page;
 		$results = $this->state->getByCountry($page, $term, $country_id);
 
 	    echo json_encode($results);
@@ -63,7 +63,7 @@ class Common extends Base_Controller {
 
 		$page = $this->input->get('page', true);
 		$term = $this->input->get('term', true);
-		
+		$page = $page == "" ? 1 : $page;
 		$results = $this->state->getByCountry($page, $term, $country_id);
 
 	    echo json_encode($results);

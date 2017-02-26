@@ -78,8 +78,7 @@ class License extends Base_Controller {
 		
 	}
 
-	public function delete(){
-		$id = $this->input->post('id');
+	public function delete($id){
 
 		$response = array(
 			'success' => false, 
@@ -113,12 +112,4 @@ class License extends Base_Controller {
 	    echo json_encode($results);
 	}
 
-	// public function search_city($country_id){
-	// 	$this->load->model('admin/City_model', 'city', true);
-	// 	$data = $this->input->get();
-		
-	// 	$results = $this->city->paginate($data['page'], $data['term'], $country_id);
-
-	//     echo json_encode($results);
-	// }
 }
