@@ -116,7 +116,7 @@
 
         /* = = = = = = = delete buttons = = = = = = = = = */
         $(document).on("click", ".btn-delete-membership", function (){
-        	var id = $this.attr('data-id');
+        	var id = $(this).attr('data-id');
 
             addDeleteFunction($(this), base_url+'admin/membership/delete/', dtTable_memberships, function (){
                 // remove from source

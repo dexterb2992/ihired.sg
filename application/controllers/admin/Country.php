@@ -41,7 +41,7 @@ class Country extends Base_Controller {
 
 		$response = array(
 			'success' => true, 
-			'msg' => "New skill has been added." 
+			'msg' => "New record has been added." 
 		);
 
 		if($this->form_validation->run() != true){

@@ -6,7 +6,9 @@
 
 		// forms
 		var frm_country = $("#frm_country"),
-			frm_state = $("#frm_state");
+			frm_state = $("#frm_state"),
+			frm_city = $("#frm_city"),
+			frm_town = $("#frm_town");
 
 		// textfields
 		var country_name = frm_country.find("input[name='country_name']"),
@@ -18,7 +20,9 @@
 		// select boxes
 		var sb_stateCountry = $("#sb_state_country"),
 			sb_cityCountry = $("#sb_city_country")
-			sb_cityState = $("#sb_city_state");
+			sb_cityState = $("#sb_city_state"),
+			sb_townCountry = $("#sb_town_country"),
+			sb_townCity = $("#sb_town_city");
 
 		// tables
 		var tbl_countries = $("#tbl_countries"),
@@ -28,11 +32,15 @@
 
 		// buttons
 		var btn_add_country = $("#btn_add_country"),
-			btn_add_state = $("#btn_add_state"),
+			btn_add_state = $("#btn_add_state")
+			btn_add_city = $("#btn_add_city"),
+			btn_add_town = $("#btn_add_town"),
 
 			raw_btn = $('<button type="button" class="btn btn-primary btn-xs btn-noradius" title="Delete this record.">Delete</button>'),
 			btn_delete_country = raw_btn.clone().addClass('btn-delete-country');
-			btn_delete_state = raw_btn.clone().addClass('btn-delete-state');
+			btn_delete_state = raw_btn.clone().addClass('btn-delete-state'),
+			btn_delete_city = raw_btn.clone().addClass('btn-delete-city'),
+			btn_delete_town = raw_btn.clone().addClass('btn-delete-town');
 
 		// datatables
 		var dt_tbl_countries = $("#tbl_countries").DataTable({
@@ -48,13 +56,54 @@
 				"iDisplayLength": 100
 			});
 
-		// select2 initialization and DOM events
+		/* select2 initialization and DOM events */
+
+		// Manage State tab
 		ajaxSelect2(sb_stateCountry, base_url+'common/get_countries');
 
+		// Manage City tab
 		ajaxSelect2(sb_cityCountry, base_url+'common/get_countries');
 
+		sb_cityState.select2({
+			placeholder: sb_cityState.attr("data-text"),
+	        width: '100%',
+	        theme: 'bootstrap'
+		});
+
 		sb_cityCountry.on("change", function (){
-			// if( sb_cityState )
+			var country_id = $("#sb_city_country").val();
+
+			checkCountryHasStates(country_id, function (){
+	            $('*[data-hide-when="country_has_no_states"]').fadeIn();
+
+	            if( sb_cityState.data('select2') ){
+	            	sb_cityState.select2('destroy').html("");
+	            }
+
+	            ajaxSelect2(sb_cityState, base_url+'common/get_states/'+country_id);
+
+	        }, function (){
+	            $('*[data-hide-when="country_has_no_states"]').fadeOut();
+	        });
+		});
+
+		// Manage Town tab
+		ajaxSelect2(sb_townCountry, base_url+"common/get_countries");
+
+		sb_townCity.select2({
+			placeholder: sb_townCity.attr("data-text"),
+	        width: '100%',
+	        theme: 'bootstrap'
+		});
+
+		sb_townCountry.on("change", function (){
+			var country_id = $("#sb_town_country").val();
+
+			if( sb_townCity.data('select2') ){
+            	sb_townCity.select2('destroy').html("");
+            }
+
+            ajaxSelect2(sb_townCity, base_url+'common/get_cities/'+country_id);
 		});
 
 		/* DOM events  */
@@ -159,6 +208,110 @@
             });
 		});
 
+		btn_add_city.on("click", function (){
+			var $this = $(this),
+				city_name = frm_city.find('input[name="city_name"]').val(),
+				city_country = $("#city_country").val(),
+				city_state = $("#city_state").val();
+
+			$.ajax({
+                url: base_url+"admin/city/create",
+                type: 'post',
+                dataType: 'json',
+                data: {
+                	city_name : city_name,
+					country_id : city_country,
+					state_id : city_state
+                },
+                beforeSend: function (){
+                    $this.addClass("disabled").attr("disabled", "disabled").text("Please wait...");
+                },
+                success: function (data){
+                    if( data.success == true ){
+                    	var city = data.details.city;
+
+                        btn_delete_city.attr("data-id", city.city_id);
+
+                        var div = $(document.createElement('div')).append(btn_delete_city);
+
+                        dt_tbl_cities.row.add([
+                            city_name,
+                            city.state_name,
+                            city.country_name,
+							city.date_added,
+							city.full_name,
+                            div.html()
+                        ]).draw( false );
+
+                        flashdata_status(data.msg, 'Saved.');
+                        // clear form
+                        clearFormValues(frm_city);
+                    }else{
+                        flashdata_status(data.msg);
+                    }
+
+                    $this.removeClass("disabled").removeAttr("disabled").text("Update");
+                },
+                error: function (data){
+                    console.error(data);
+                    flashdata_status("Whoops! Something went wrong. Please try again later.");
+                    $this.removeClass("disabled").removeAttr("disabled").text("Update");
+                }
+            });
+		});
+
+		btn_add_town.on("click", function (){
+			var $this = $(this),
+				town_name = frm_town.find('input[name="town_name"]').val(),
+				town_country = $("#sb_town_country").val(),
+				town_city = $("#sb_town_city").val();
+
+			$.ajax({
+                url: base_url+"admin/town/create",
+                type: 'post',
+                dataType: 'json',
+                data: {
+                	town_name : town_name,
+					country_id : town_country,
+					city_id : town_city
+                },
+                beforeSend: function (){
+                    $this.addClass("disabled").attr("disabled", "disabled").text("Please wait...");
+                },
+                success: function (data){
+                    if( data.success == true ){
+                    	var town = data.details.town;
+
+                        btn_delete_town.attr("data-id", town.town_id);
+
+                        var div = $(document.createElement('div')).append(btn_delete_town);
+
+                        dt_tbl_towns.row.add([
+                            town_name,
+                            town.city_name,
+                            town.country_name,
+							town.date_added,
+							town.full_name,
+                            div.html()
+                        ]).draw( false );
+
+                        flashdata_status(data.msg, 'Saved.');
+                        // clear form
+                        clearFormValues(frm_town);
+                    }else{
+                        flashdata_status(data.msg);
+                    }
+
+                    $this.removeClass("disabled").removeAttr("disabled").text("Update");
+                },
+                error: function (data){
+                    console.error(data);
+                    flashdata_status("Whoops! Something went wrong. Please try again later.");
+                    $this.removeClass("disabled").removeAttr("disabled").text("Update");
+                }
+            });
+		});
+
 
 		// Delete buttons ------------------------------------------------------------------------------
 		$(document).on("click", ".btn-delete-country", function (){
@@ -173,6 +326,10 @@
 
 		$(document).on("click", ".btn-delete-city", function (){
 			addDeleteFunction($(this), base_url + 'admin/city/delete/', dt_tbl_cities);
+		});
+
+		$(document).on("click", ".btn-delete-town", function (){
+			addDeleteFunction($(this), base_url + 'admin/town/delete/', dt_tbl_towns);
 		});
 
 	});

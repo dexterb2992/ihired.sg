@@ -240,3 +240,27 @@ function ajaxSelect2($element, $sourceUrl){
         }
     });
 }
+
+/**
+ * Checks if a country has a states
+ * 
+ * @param integer country_id
+ * @param function callbackTrue
+ * @param function callFalse
+ *
+ * @return boolean
+ */
+function checkCountryHasStates(country_id, callbackTrue, callbackFalse){
+    $.ajax({
+        url: base_url+"common/check_country_states/"+country_id,
+        type: 'get',
+        dataType: 'json',
+        success: function (data){
+            if( data.response == true ){
+                if( callbackTrue ) callbackTrue();
+            }else{
+                if( callbackFalse ) callbackFalse();
+            }
+        }
+    });
+}

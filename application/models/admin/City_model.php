@@ -102,14 +102,22 @@ class City_model extends CI_Model{
 		return array();
 	}
 
-	public function check($name, $country_id){
+	public function check($data){
 		$this->db->select("*");
-		$this->db->where('LOWER(city_name)', strtolower($name));
-		$this->db->where('country_id', $country_id);
+		$this->db->where("LOWER(city_name)", strtolower($data['city_name']));
+		$this->db->where('country_id', $data['country_id']);
 		$res = $this->db->get($this->table);
 		if( $res->num_rows() > 0 )
 			return true; // already exists
 		return false;
+	}
+
+	/**
+	 * Just an alias for check function
+	 *
+	 */
+	public function exists($data){
+		return $this->check($data);
 	}
 
 	// returns data for autocomplete source

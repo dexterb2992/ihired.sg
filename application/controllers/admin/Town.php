@@ -1,10 +1,10 @@
 <?php
 /**
- * A resource Controller for State
+ * A resource Controller for Town
  */
 require APPPATH."controllers/Base_Controller.php";
 
-class State extends Base_Controller {
+class Town extends Base_Controller {
 
 	public function __construct(){
 
@@ -14,12 +14,13 @@ class State extends Base_Controller {
 		$this->method	= $this->router->method;
 		$this->module_url = $this->class.'/'.$this->method;
 
-		$this->load->model('admin/State_model', 'state', true);
+		$this->load->model('admin/Town_model', 'town', true);
 	}
 
 	public function create(){
 
-		$this->form_validation->set_rules('state_name', 'State Name', 'xss_clean|required|trim');
+		$this->form_validation->set_rules('town_name', 'Town Name', 'xss_clean|required|trim');
+		$this->form_validation->set_rules('city_id', 'City', 'xss_clean|required|trim');
 		$this->form_validation->set_rules('country_id', 'Country', 'xss_clean|required|trim');
 
 		$response = array(
@@ -33,25 +34,28 @@ class State extends Base_Controller {
 		}else{
 			$data = $this->input->post();
 			$record = array(
-				'state_name' => $data['state_name'],
-				'country_id' => $data['country_id']
+				'town_name' => $data['town_name'],
+				'city_id' => $data['city_id'],
+				'country_id' => $data['country_id'],
+				'date_added' => date('Y-m-d'),
+				'user_id' => $this->session->userdata('user_id')
 			);
 
-			if( $this->state->exists($data['state_name'], $data['country_id']) == false ){
-				$result = $this->state->create($record);
+			if( $this->town->exists($record) == false ){
+				$result = $this->town->create($record);
 
 				if( $result == false ){
 					$response['success'] = false;
-					$response['msg'] = 'Unable to save a country right now. Please try again later.';
+					$response['msg'] = 'Unable to save a record right now. Please try again later.';
 				}else{
 					$response['details'] = array(
-						"state" => $this->state->find($result)
+						"town" => $this->town->find($result)
 					);
 				}
 			}else{
 				$response = array(
 					'success' => false, 
-					'msg' => "This state already exists on that country." 
+					'msg' => "This town already exists." 
 				);
 			}
 		}
@@ -65,7 +69,7 @@ class State extends Base_Controller {
 			'msg' => "Sorry, but we can't process your request right now. Please try again later." 
 		);
 
-		if( $this->state->delete($id) ){
+		if( $this->town->delete($id) ){
 			$response['msg'] = 'Successfully deleted.';
 			$response['success'] = true;
 		}

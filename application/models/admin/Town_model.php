@@ -9,9 +9,12 @@ class Town_model extends CI_Model{
 	}
 
 	public function all($format = 'object'){
-		$this->db->select($this->table.".*, t2.country_name");
-		$this->db->join('country_master as t2', "t2.country_id = {$this->table}.country_id", 'INNER');
-	    $res = $this->db->get($this->table);
+		$this->db->select($this->table.".*, t2.country_name, t3.city_name, t4.full_name");
+		$this->db->from($this->table);
+		$this->db->join('country_master as t2', "t2.country_id = {$this->table}.country_id", 'inner');
+		$this->db->join('city_master as t3', "t3.city_id = {$this->table}.city_id", 'inner');
+		$this->db->join('user_master as t4', "t4.user_id = {$this->table}.user_id", 'inner');
+	    $res = $this->db->get();
 	    
 		switch ($format) {
 			case 'array':
@@ -62,8 +65,13 @@ class Town_model extends CI_Model{
 	 * @param string $format
 	 */
 	public function find($id, $format = 'object'){
+		$this->db->select($this->table.".*, t2.country_name, t3.city_name, t4.full_name");
+		$this->db->from($this->table);
+		$this->db->join('country_master as t2', "t2.country_id = {$this->table}.country_id", 'inner');
+		$this->db->join('city_master as t3', "t3.city_id = {$this->table}.city_id", 'inner');
+		$this->db->join('user_master as t4', "t4.user_id = {$this->table}.user_id", 'inner');
 		$this->db->where($this->table_id, $id);
-		$res = $this->db->get($this->table);
+		$res = $this->db->get();
 
 		if( $res->num_rows() > 0 )
 			return $format == 'array' ? $res->row_array() : $res->row();
@@ -93,14 +101,23 @@ class Town_model extends CI_Model{
 		return array();
 	}
 
-	public function check($name, $country_id){
+	public function check($data){
 		$this->db->select("*");
-		$this->db->where('LOWER(town_name)', strtolower($name));
-		$this->db->where('country_id', $country_id);
+		$this->db->where("LOWER(town_name)", strtolower($data['town_name']));
+		$this->db->where('country_id', $data['country_id']);
+		$this->db->where('city_id', $data['city_id']);
 		$res = $this->db->get($this->table);
 		if( $res->num_rows() > 0 )
 			return true; // already exists
 		return false;
+	}
+
+	/**
+	 * Just an alias for check function
+	 *
+	 */
+	public function exists($data){
+		return $this->check($data);
 	}
 
 	// returns data for autocomplete source

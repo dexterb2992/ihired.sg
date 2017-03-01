@@ -554,18 +554,5 @@
 
     // The rest of the codes goes here
 
-    function checkCountryHasStates(country_id, callbackTrue, callbackFalse){
-        $.ajax({
-            url: base_url+"common/check_country_states/"+country_id,
-            type: 'get',
-            dataType: 'json',
-            success: function (data){
-                if( data.response == true ){
-                    if( callbackTrue ) callbackTrue();
-                }else{
-                    if( callbackFalse ) callbackFalse();
-                }
-            }
-        });
-    }
+    
 }));

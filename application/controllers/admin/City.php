@@ -1,10 +1,10 @@
 <?php
 /**
- * A resource Controller for State
+ * A resource Controller for City
  */
 require APPPATH."controllers/Base_Controller.php";
 
-class State extends Base_Controller {
+class City extends Base_Controller {
 
 	public function __construct(){
 
@@ -14,12 +14,13 @@ class State extends Base_Controller {
 		$this->method	= $this->router->method;
 		$this->module_url = $this->class.'/'.$this->method;
 
-		$this->load->model('admin/State_model', 'state', true);
+		$this->load->model('admin/City_model', 'state', true);
 	}
 
 	public function create(){
 
-		$this->form_validation->set_rules('state_name', 'State Name', 'xss_clean|required|trim');
+		$this->form_validation->set_rules('city_name', 'City Name', 'xss_clean|required|trim');
+		$this->form_validation->set_rules('state_id', 'City Name', 'xss_clean|trim');
 		$this->form_validation->set_rules('country_id', 'Country', 'xss_clean|required|trim');
 
 		$response = array(
@@ -33,16 +34,17 @@ class State extends Base_Controller {
 		}else{
 			$data = $this->input->post();
 			$record = array(
-				'state_name' => $data['state_name'],
+				'city_name' => $data['city_name'],
+				'state_id' => $data['state_id'],
 				'country_id' => $data['country_id']
 			);
 
-			if( $this->state->exists($data['state_name'], $data['country_id']) == false ){
+			if( $this->state->exists($record) == false ){
 				$result = $this->state->create($record);
 
 				if( $result == false ){
 					$response['success'] = false;
-					$response['msg'] = 'Unable to save a country right now. Please try again later.';
+					$response['msg'] = 'Unable to save a record right now. Please try again later.';
 				}else{
 					$response['details'] = array(
 						"state" => $this->state->find($result)
@@ -51,7 +53,7 @@ class State extends Base_Controller {
 			}else{
 				$response = array(
 					'success' => false, 
-					'msg' => "This state already exists on that country." 
+					'msg' => "This city already exists." 
 				);
 			}
 		}

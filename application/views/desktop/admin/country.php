@@ -106,7 +106,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div><!-- end Manage Country tab-->
+            </div><!-- END Manage Country tab-->
 
             <div class="tab-pane" id="m_state">
                 <form class="margin-top col-lg-10" id="frm_state" method="post">
@@ -153,7 +153,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div><!-- end Manage State tab -->
+            </div><!-- END Manage State tab -->
 
             <div class="tab-pane" id="m_city">
                 <form class="margin-top col-lg-10" id="frm_city" method="post">
@@ -161,17 +161,17 @@
                         <tr>
                             <th>City Name</th>
                             <th>Country</th>
-                            <th data-hide-when="country_has_no_state">State</th>
+                            <th data-hide-when="country_has_no_states">State</th>
                             <th>&nbsp;</th>
                         </tr>
                         <tr>
                             <td>
-                                <input type="text" name="state_name" class="form-control input-sm">
+                                <input type="text" name="city_name" class="form-control input-sm">
                             </td>
                             <td>
                                 <select class="form-control" id="sb_city_country" name="country_id" data-text="- Select Country -"></select>
                             </td>
-                            <td data-hide-when="country_has_no_state">
+                            <td data-hide-when="country_has_no_states">
                                 <select class="form-control" id="sb_city_state" name="state_id" data-text="- Select State -"></select>
                             </td>
                             <td>
@@ -197,7 +197,7 @@
                             <td class="vert-align">
                                 <?= ucfirst($city->city_name); ?>
                             </td>
-                            <td data-hide-when="country_has_no_state">
+                            <td>
                                 <?= ucfirst($city->state_name); ?>
                             </td>
                             <td>
@@ -216,7 +216,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div><!-- end Manage City tab-->
+            </div><!-- END Manage City tab-->
 
             <div class="tab-pane" id="m_town">
                 <form class="margin-top col-lg-10" id="frm_town" method="post">
@@ -279,7 +279,7 @@
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-            </div><!-- end Manage Town tab-->
+            </div><!-- END Manage Town tab-->
         </div>
     </div>
 </div>

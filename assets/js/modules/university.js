@@ -115,7 +115,7 @@
 
         /* = = = = = = = delete buttons = = = = = = = = = */
         $(document).on("click", ".btn-delete-university", function (){
-        	var id = $this.attr('data-id');
+        	var id = $(this).attr('data-id');
 
             addDeleteFunction($(this), base_url+'admin/university/delete/', dtTable_universities, function (){
                 //remove from source

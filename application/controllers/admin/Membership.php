@@ -78,9 +78,7 @@ class Membership extends Base_Controller {
 		
 	}
 
-	public function delete(){
-		$id = $this->input->post('id');
-
+	public function delete($id){
 		$response = array(
 			'success' => false, 
 			'msg' => "Sorry, but we can't process your request right now. Please try again later." 

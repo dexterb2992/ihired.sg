@@ -31,7 +31,7 @@ class Function_model extends CI_Model {
 
 			$insert_id = $this->db->insert_id();
 			$this->db->select("t1.*, t2.full_name, t2.short_name");
-			$this->from($this->table." as t1");
+			$this->db->from($this->table." as t1");
 		    $this->db->join('user_master as t2', 't1.user_id = t2.user_id', 'LEFT');
 	    	$this->db->order_by($this->table_id, 'DESC');
 			$this->db->where($this->table_id, $insert_id);
